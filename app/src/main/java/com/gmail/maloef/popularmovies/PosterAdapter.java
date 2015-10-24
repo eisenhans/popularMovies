@@ -39,9 +39,11 @@ public class PosterAdapter extends BaseAdapter {
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(context);
-            imageView.setLayoutParams(new GridView.LayoutParams(250, 250));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(8, 8, 8, 8);
+            //imageView.setLayoutParams(new GridView.LayoutParams(400, 400));
+            imageView.setLayoutParams(new GridView.LayoutParams(600, 600));
+//            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            imageView.setPadding(0, 0, 0, 0);
         } else {
             imageView = (ImageView) convertView;
         }
@@ -51,7 +53,7 @@ public class PosterAdapter extends BaseAdapter {
     }
 
     private Integer[] posterIds = {
-            R.drawable.pic01, R.drawable.pic02, R.drawable.pic03, R.drawable.pic04};
-//            R.drawable.pic05, R.drawable.pic06, R.drawable.pic07, R.drawable.pic08,
+            R.drawable.pic01, R.drawable.pic02, R.drawable.pic03, R.drawable.pic04,
+            R.drawable.pic05, R.drawable.pic06, R.drawable.pic07, R.drawable.pic08};
 //            R.drawable.pic09, R.drawable.pic10, R.drawable.pic11, R.drawable.pic12};
 }
