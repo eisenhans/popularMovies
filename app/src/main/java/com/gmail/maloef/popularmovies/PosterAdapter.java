@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
 /**
  * Created by Markus on 15.10.2015.
  */
@@ -50,9 +52,17 @@ public class PosterAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) convertView;
         }
-
-        imageView.setImageResource(posterIds[position]);
+        loadImageIntoView(position, imageView);
         return imageView;
+    }
+
+    private void loadImageIntoView(int position, ImageView imageView) {
+        if (position == 1) {
+//            Picasso.with(context).load("http://i.imgur.com/DvpvklR.png").into(imageView);
+            Picasso.with(context).load("http://image.tmdb.org/t/p/w185/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg").into(imageView);
+        } else {
+            imageView.setImageResource(posterIds[position]);
+        }
     }
 
     private Integer[] posterIds = {
