@@ -19,6 +19,8 @@ public class MovieViewFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         final GridView movieView = (GridView) rootView.findViewById(R.id.movieview);
 
+//        String[] values = new String[]{"anton", "berta", "cäsar", "dietrich", "emil"};
+//        new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, values);
         movieView.setAdapter(new PosterAdapter(getActivity()));
 
         return rootView;

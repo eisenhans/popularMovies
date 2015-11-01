@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 
 /**
@@ -40,9 +39,13 @@ public class PosterAdapter extends BaseAdapter {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(context);
             //imageView.setLayoutParams(new GridView.LayoutParams(400, 400));
-            imageView.setLayoutParams(new GridView.LayoutParams(600, 600));
-//            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+//            imageView.setLayoutParams(new GridView.LayoutParams(600, 600));
+            imageView.setAdjustViewBounds(true); // whole pic visible, looks good (with CENTER_CROP)
+//            imageView.setAdjustViewBounds(false); // pic visible in whole length (very long), cropped width (narrow stripe) (with CENTER or CENTER_CROP)
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP); // good together with adjustViewBounds = true
+//            imageView.setScaleType(ImageView.ScaleType.CENTER); // pic visible in whole length (very long), cropped width (narrow stripe)
+//            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE); // can look weird: lots of blank space
+//            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER); // can look weird: lots of blank space
             imageView.setPadding(0, 0, 0, 0);
         } else {
             imageView = (ImageView) convertView;
