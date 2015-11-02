@@ -29,6 +29,10 @@ public class MovieDataParser {
             JSONObject jsonMovie = (JSONObject) jsonMovies.get(i);
             movie.id = jsonMovie.getInt("id");
             movie.title = jsonMovie.getString("title");
+            movie.originalTitle = jsonMovie.getString("original_title");
+            movie.releaseDate = jsonMovie.getString("release_date");
+            movie.voteAverage = jsonMovie.getString("vote_average");
+            movie.overview = jsonMovie.getString("overview");
             movie.posterPath = jsonMovie.getString("poster_path");
 
             movies.add(movie);

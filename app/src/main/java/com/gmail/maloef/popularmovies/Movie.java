@@ -8,8 +8,12 @@ public class Movie {
     public Integer id;
     public String posterPath;
     public String title;
+    public String originalTitle;
+    public String overview;
+    public String releaseDate;
+    public String voteAverage;
 
     public String toString() {
-        return "movie [id:" + id + ", title:" + title +", posterPath:" + posterPath + "]";
+        return "movie [id:" + id + ", title:" + title + ", overview:" + overview + ", releaseDate:" + releaseDate + ", voteAverage:" + voteAverage + ", posterPath:" + posterPath + "]";
     }
 }
