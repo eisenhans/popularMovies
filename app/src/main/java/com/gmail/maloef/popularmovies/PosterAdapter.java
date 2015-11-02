@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -14,37 +14,19 @@ import java.util.List;
 /**
  * Created by Markus on 15.10.2015.
  */
-public class PosterAdapter extends BaseAdapter {
+public class PosterAdapter extends ArrayAdapter<Movie> {
     private static final String LOG_TAG = PosterAdapter.class.getName();
 
-    private Context context;
-    private List<Movie> movies;
-
-    public PosterAdapter(Context context) {
-        this.context = context;
+    public PosterAdapter(Context context, List<Movie> movies) {
+        super(context, 0, movies);
     }
     
-    @Override
-    public int getCount() {
-        return posterIds.length;
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
-            imageView = new ImageView(context);
+            imageView = new ImageView(getContext());
             //imageView.setLayoutParams(new GridView.LayoutParams(400, 400));
 //            imageView.setLayoutParams(new GridView.LayoutParams(600, 600));
             imageView.setAdjustViewBounds(true); // whole pic visible, looks good (with CENTER_CROP)
@@ -62,44 +44,14 @@ public class PosterAdapter extends BaseAdapter {
     }
 
     private void loadImageIntoView(int position, ImageView imageView) {
-//        Log.i(LOG_TAG, "Loading image " + position + ", movies: " + movies);
-        for (int i = 0; i < 3; i++) {
-            if (movies != null) {
-                Log.i(LOG_TAG, "Found movies after waiting " + i + " sec");
-                break;
-            }
-            Log.i(LOG_TAG, "Try " + i + "/3 for position " + position);
-            try {
-                Thread.currentThread().sleep(i * 1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        if (movies == null || movies.size() <= position) {
-            Log.i(LOG_TAG, "no movie found for position " + position + ", using no image");
-//            imageView.setImageResource(posterIds[position]);
+        Movie movie = getItem(position);
+        if (movie == null) {
+            Log.i(LOG_TAG, "no movie found for position " + position);
         } else {
-            Movie movie = movies.get(position);
-            Log.i(LOG_TAG, "Real poster found at position " + position + ", movie is " + movie);
+            Log.i(LOG_TAG, "movie found for position " + position + ": " + movie);
             String url = "http://image.tmdb.org/t/p/w185/" + movie.posterPath;
-            Picasso.with(context).load(url).into(imageView);
+            Picasso.with(getContext()).load(url).into(imageView);
             Log.i(LOG_TAG, "Finished loading image " + position);
         }
-
-//        if (position == 1) {
-//            Picasso.with(context).load("http://image.tmdb.org/t/p/w185/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg").into(imageView);
-//        } else {
-//            imageView.setImageResource(posterIds[position]);
-//        }
     }
-
-    public void setMovies(List<Movie> movies) {
-        Log.i(LOG_TAG, "Setting " + movies.size() + " movies");
-        this.movies = movies;
-    }
-
-    private Integer[] posterIds = {
-            R.drawable.pic01, R.drawable.pic02, R.drawable.pic03, R.drawable.pic04,
-            R.drawable.pic05, R.drawable.pic06, R.drawable.pic07, R.drawable.pic08};
-//            R.drawable.pic09, R.drawable.pic10, R.drawable.pic11, R.drawable.pic12};
 }

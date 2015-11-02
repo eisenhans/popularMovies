@@ -91,7 +91,7 @@ public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
         }
         Log.i(LOG_TAG, "Looked up movies in web: " + json);
         try {
-            return parser.getMovies(json, 10);
+            return parser.getMovies(json, 20);
         } catch (JSONException e) {
             e.printStackTrace();
             return new ArrayList<Movie>();
@@ -101,13 +101,8 @@ public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
     @Override
     protected void onPostExecute(List<Movie> movies) {
         Log.i(LOG_TAG, movies.size() + " movies found: " + movies);
-        posterAdapter.setMovies(movies);
 
-//        ArrayList<Integer> forecastList = new ArrayList<Integer>(Arrays.asList(forecastArray));
-
-//        forecastAdapter.clear();
-//        forecastAdapter.addAll(forecastList);
-//
-//        Log.i(LOG_TAG, "forecastAdapter after update: " + forecastAdapter);
+        posterAdapter.clear();
+        posterAdapter.addAll(movies);
     }
 }

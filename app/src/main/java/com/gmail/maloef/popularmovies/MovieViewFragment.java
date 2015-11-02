@@ -9,6 +9,9 @@ import android.widget.GridView;
 
 import com.gmail.maloef.popularmovies.fetch.FetchMoviesTask;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Markus on 15.10.2015.
  */
@@ -22,7 +25,8 @@ public class MovieViewFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         final GridView movieView = (GridView) rootView.findViewById(R.id.movieview);
 
-        posterAdapter = new PosterAdapter(getActivity());
+        List<Movie> movies = new ArrayList<Movie>();
+        posterAdapter = new PosterAdapter(getActivity(), movies);
         movieView.setAdapter(posterAdapter);
 
         return rootView;
