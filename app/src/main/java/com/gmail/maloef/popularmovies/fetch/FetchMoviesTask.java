@@ -22,8 +22,6 @@ import java.util.List;
 public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
     private final String LOG_TAG = getClass().getName();
 
-    private static final String API_KEY = "insert_api_key_here";
-
     private MovieDataParser parser = new MovieDataParser();
 
     private PosterAdapter posterAdapter;
@@ -47,7 +45,7 @@ public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
                     .appendPath("discover")
                     .appendPath("movie")
                     .appendQueryParameter("sort_by", "popularity.desc")
-                    .appendQueryParameter("api_key", API_KEY);
+                    .appendQueryParameter("api_key", ApiKeyHolder.API_KEY);
             Uri uri = uriBuilder.build();
 
             Log.i(LOG_TAG, "looking up movies from uri " + uri);
