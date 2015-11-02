@@ -1,6 +1,7 @@
 package com.gmail.maloef.popularmovies;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -8,12 +9,16 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 /**
  * Created by Markus on 15.10.2015.
  */
 public class PosterAdapter extends BaseAdapter {
+    private static final String LOG_TAG = PosterAdapter.class.getName();
 
     private Context context;
+    private List<Movie> movies;
 
     public PosterAdapter(Context context) {
         this.context = context;
@@ -57,12 +62,40 @@ public class PosterAdapter extends BaseAdapter {
     }
 
     private void loadImageIntoView(int position, ImageView imageView) {
-        if (position == 1) {
-//            Picasso.with(context).load("http://i.imgur.com/DvpvklR.png").into(imageView);
-            Picasso.with(context).load("http://image.tmdb.org/t/p/w185/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg").into(imageView);
-        } else {
-            imageView.setImageResource(posterIds[position]);
+//        Log.i(LOG_TAG, "Loading image " + position + ", movies: " + movies);
+        for (int i = 0; i < 3; i++) {
+            if (movies != null) {
+                Log.i(LOG_TAG, "Found movies after waiting " + i + " sec");
+                break;
+            }
+            Log.i(LOG_TAG, "Try " + i + "/3 for position " + position);
+            try {
+                Thread.currentThread().sleep(i * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+        if (movies == null || movies.size() <= position) {
+            Log.i(LOG_TAG, "no movie found for position " + position + ", using no image");
+//            imageView.setImageResource(posterIds[position]);
+        } else {
+            Movie movie = movies.get(position);
+            Log.i(LOG_TAG, "Real poster found at position " + position + ", movie is " + movie);
+            String url = "http://image.tmdb.org/t/p/w185/" + movie.posterPath;
+            Picasso.with(context).load(url).into(imageView);
+            Log.i(LOG_TAG, "Finished loading image " + position);
+        }
+
+//        if (position == 1) {
+//            Picasso.with(context).load("http://image.tmdb.org/t/p/w185/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg").into(imageView);
+//        } else {
+//            imageView.setImageResource(posterIds[position]);
+//        }
+    }
+
+    public void setMovies(List<Movie> movies) {
+        Log.i(LOG_TAG, "Setting " + movies.size() + " movies");
+        this.movies = movies;
     }
 
     private Integer[] posterIds = {
