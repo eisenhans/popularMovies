@@ -28,6 +28,7 @@ public class Movie implements Parcelable {
         if (posterPath == null || posterPath.equals("null")) {
             return null;
         }
+        // TODO: move this to properties file
         return "http://image.tmdb.org/t/p/w185/" + posterPath;
     }
 

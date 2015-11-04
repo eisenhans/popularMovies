@@ -1,4 +1,26 @@
 <resources>
     <string name="app_name">Popular Movies</string>
     <string name="action_settings">Settings</string>
+
+    <string name="sort_by_key">sort_by</string>
+    <string name="sort_by_title">Sort criteria</string>
+
+    <string name="sort_by_entry_popularity">Popularity</string>
+    <string name="sort_by_entry_release_date">Release date</string>
+
+    <string name="sort_by_entry_value_popularity">popularity</string>
+    <string name="sort_by_entry_value_release_date">release_date</string>
+
+    <string-array name="sort_by_entries">
+        <item>@string/sort_by_entry_popularity</item>
+        <item>@string/sort_by_entry_release_date</item>
+    </string-array>
+
+    <string-array name="sort_by_entry_values">
+        <item>@string/sort_by_entry_value_popularity</item>
+        <item>@string/sort_by_entry_value_release_date</item>
+    </string-array>
+
 </resources>
+
+

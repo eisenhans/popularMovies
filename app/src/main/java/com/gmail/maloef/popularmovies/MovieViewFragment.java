@@ -21,11 +21,6 @@ import java.util.List;
  */
 public class MovieViewFragment extends Fragment {
 
-    public static enum SortCriteria {
-        Popularity,
-        Release_Date;
-    }
-
     private PosterAdapter posterAdapter;
 
     @Override
@@ -59,13 +54,13 @@ public class MovieViewFragment extends Fragment {
     }
 
     private void updateMovies() {
-        new FetchMoviesTask(posterAdapter).execute(sortCriteria().name());
+        new FetchMoviesTask(posterAdapter).execute(sortCriteria());
     }
 
-    private SortCriteria sortCriteria() {
+    private String sortCriteria() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//        String location = prefs.getString(
-//                getString(R.string.pref_location_key), getString(pref_location_default));
-        return SortCriteria.Release_Date;
+        String sortBy = prefs.getString(
+                getString(R.string.sort_by_key), getString(R.string.sort_by_entry_value_popularity));
+        return sortBy;
     }
 }
