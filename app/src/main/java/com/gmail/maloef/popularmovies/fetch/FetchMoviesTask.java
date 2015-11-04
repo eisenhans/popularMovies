@@ -56,6 +56,7 @@ public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
             Log.i(LOG_TAG, "looking up movies from uri " + uri);
             URL url = new URL(uri.toString());
 
+            // TODO the following contains a lot of boilerplate code - there must be an easier way!?
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
