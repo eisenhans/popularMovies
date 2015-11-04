@@ -6,7 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by Markus on 02.11.2015.
@@ -19,12 +22,24 @@ public class DetailActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         Intent intent = getActivity().getIntent();
-        if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-            String movieDetails = intent.getStringExtra(Intent.EXTRA_TEXT);
 
-            TextView textView = (TextView) rootView.findViewById(R.id.detail_text);
-            textView.setText(movieDetails);
+        if (intent != null && intent.hasExtra("movie")) {
+            Movie movie = (Movie) intent.getParcelableExtra("movie");
+
+            ImageView imageView = (ImageView) rootView.findViewById(R.id.movie_poster_path);
+            Picasso.with(getContext()).load(movie.getPosterUrl()).into(imageView);
+
+            setText(rootView, R.id.movie_title, movie.title);
+            setText(rootView, R.id.movie_release_year, "" + movie.getReleaseYear());
+            setText(rootView, R.id.movie_original_title, movie.originalTitle);
+            setText(rootView, R.id.movie_vote_average, movie.voteAverage + "/10");
+            setText(rootView, R.id.movie_overview, movie.overview);
         }
         return rootView;
+    }
+
+    private void setText(View rootView, int textViewId, String text) {
+        TextView textView = (TextView) rootView.findViewById(textViewId);
+        textView.setText(text);
     }
 }

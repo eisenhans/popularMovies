@@ -35,11 +35,9 @@ public class MovieViewFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Movie movie = posterAdapter.getItem(position);
-//                Toast.makeText(getActivity(), movie.toString(), Toast.LENGTH_SHORT).show();
 
-                String extraText = "extraTextItem";
-                Intent intent = new Intent(getActivity(), DetailActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, movie.toString());
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra("movie", movie);
                 startActivity(intent);
             }
         });

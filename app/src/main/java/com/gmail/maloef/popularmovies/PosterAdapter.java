@@ -49,8 +49,7 @@ public class PosterAdapter extends ArrayAdapter<Movie> {
             Log.i(LOG_TAG, "no movie found for position " + position);
         } else {
             Log.i(LOG_TAG, "movie found for position " + position + ": " + movie);
-            String url = "http://image.tmdb.org/t/p/w185/" + movie.posterPath;
-            Picasso.with(getContext()).load(url).into(imageView);
+            Picasso.with(getContext()).load(movie.getPosterUrl()).into(imageView);
             Log.i(LOG_TAG, "Finished loading image " + position);
         }
     }
