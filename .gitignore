@@ -7,5 +7,5 @@
 /captures
 ToDo.txt
 run.txt
-/app/src/main/res/drawable
+/app/src/main/res/drawable/pic*
 ApiKeyHolder.java

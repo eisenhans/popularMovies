@@ -36,6 +36,11 @@ public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
         BufferedReader reader = null;
         String json = null;
 
+        String sortBy = "popularity";
+        if (params.length > 0) {
+            sortBy = params[0];
+        }
+
         try {
             // example: http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=<apiKey>;
             Uri.Builder uriBuilder = new Uri.Builder();
@@ -44,7 +49,7 @@ public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
                     .appendPath("3")
                     .appendPath("discover")
                     .appendPath("movie")
-                    .appendQueryParameter("sort_by", "popularity.desc")
+                    .appendQueryParameter("sort_by", sortBy + ".desc")
                     .appendQueryParameter("api_key", ApiKeyHolder.API_KEY);
             Uri uri = uriBuilder.build();
 

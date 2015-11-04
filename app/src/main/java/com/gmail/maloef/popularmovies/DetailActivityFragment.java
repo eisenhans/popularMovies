@@ -27,7 +27,11 @@ public class DetailActivityFragment extends Fragment {
             Movie movie = (Movie) intent.getParcelableExtra("movie");
 
             ImageView imageView = (ImageView) rootView.findViewById(R.id.movie_poster_path);
-            Picasso.with(getContext()).load(movie.getPosterUrl()).into(imageView);
+            if (movie.getPosterUrl() == null) {
+                imageView.setImageResource(R.drawable.dummy_poster);
+            } else {
+                Picasso.with(getContext()).load(movie.getPosterUrl()).into(imageView);
+            }
 
             setText(rootView, R.id.movie_title, movie.title);
             setText(rootView, R.id.movie_release_year, "" + movie.getReleaseYear());

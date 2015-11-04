@@ -47,10 +47,15 @@ public class PosterAdapter extends ArrayAdapter<Movie> {
         Movie movie = getItem(position);
         if (movie == null) {
             Log.i(LOG_TAG, "no movie found for position " + position);
-        } else {
-            Log.i(LOG_TAG, "movie found for position " + position + ": " + movie);
-            Picasso.with(getContext()).load(movie.getPosterUrl()).into(imageView);
-            Log.i(LOG_TAG, "Finished loading image " + position);
+            return;
         }
+        if (movie.getPosterUrl() == null) {
+            imageView.setImageResource(R.drawable.dummy_poster);
+            Log.i(LOG_TAG, "no image found for movie " + movie);
+            return;
+        }
+        Log.i(LOG_TAG, "movie found for position " + position + ": " + movie);
+        Picasso.with(getContext()).load(movie.getPosterUrl()).into(imageView);
+        Log.i(LOG_TAG, "Finished loading image " + position);
     }
 }

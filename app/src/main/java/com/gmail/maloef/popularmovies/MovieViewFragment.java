@@ -2,7 +2,9 @@ package com.gmail.maloef.popularmovies;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,11 @@ import java.util.List;
  * Created by Markus on 15.10.2015.
  */
 public class MovieViewFragment extends Fragment {
+
+    public static enum SortCriteria {
+        Popularity,
+        Release_Date;
+    }
 
     private PosterAdapter posterAdapter;
 
@@ -52,6 +59,13 @@ public class MovieViewFragment extends Fragment {
     }
 
     private void updateMovies() {
-        new FetchMoviesTask(posterAdapter).execute();
+        new FetchMoviesTask(posterAdapter).execute(sortCriteria().name());
+    }
+
+    private SortCriteria sortCriteria() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//        String location = prefs.getString(
+//                getString(R.string.pref_location_key), getString(pref_location_default));
+        return SortCriteria.Release_Date;
     }
 }
