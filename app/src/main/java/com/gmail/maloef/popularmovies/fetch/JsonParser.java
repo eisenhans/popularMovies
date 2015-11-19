@@ -1,6 +1,10 @@
-package com.gmail.maloef.popularmovies;
+package com.gmail.maloef.popularmovies.fetch;
 
 import android.util.Log;
+
+import com.gmail.maloef.popularmovies.Movie;
+import com.gmail.maloef.popularmovies.Review;
+import com.gmail.maloef.popularmovies.Trailer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,8 +16,8 @@ import java.util.List;
 /**
  * Created by Markus on 01.11.2015.
  */
-public class MovieDataParser {
-    private static String LOG_TAG = MovieDataParser.class.getSimpleName();
+public class JsonParser {
+    private static String LOG_TAG = JsonParser.class.getSimpleName();
 
     public List<Movie> getMovies(String movieJsonString) {
         try {
@@ -37,8 +41,7 @@ public class MovieDataParser {
             Log.i(LOG_TAG, "Parsed " + movies.size() + " movies: " + movies);
             return movies;
         } catch (JSONException e) {
-            // TODO
-            e.printStackTrace();
+            Log.e(LOG_TAG, "could not read movies from string " + movieJsonString + "\nerror: " + e.getMessage());
             return new ArrayList<>();
         }
     }
@@ -49,7 +52,6 @@ public class MovieDataParser {
 //            "key":"BOVriTeIypQ",
 //            "name":"Spectre Ultimate 007 Trailer 2015 HD",
 //            "site":"YouTube",
-
         try {
             JSONObject jsonObject = new JSONObject(trailerJsonString);
             JSONArray jsonTrailers = (JSONArray) jsonObject.get("results");
@@ -65,9 +67,30 @@ public class MovieDataParser {
             }
             return trailers;
         } catch (JSONException e) {
-            // TODO
-            e.printStackTrace();
-            return null;
+            Log.e(LOG_TAG, "could not read trailers from string " + trailerJsonString + "\nerror: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    public List<Review> getReviews(String reviewJsonString) {
+        try {
+            JSONObject jsonObject = new JSONObject(reviewJsonString);
+
+            JSONArray jsonReviews = (JSONArray) jsonObject.get("results");
+
+            List<Review> reviews = new ArrayList<>(jsonReviews.length());
+            for (int i = 0; i < jsonReviews.length(); i++) {
+                JSONObject jsonReview = (JSONObject) jsonReviews.get(i);
+
+                String author = jsonReview.getString("author");
+                String content = jsonReview.getString("content");
+
+                reviews.add(new Review(author, content));
+            }
+            return reviews;
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, "could not read reviews from string " + reviewJsonString + "\nerror: " + e.getMessage());
+            return new ArrayList<>();
         }
     }
 }

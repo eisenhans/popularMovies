@@ -1,23 +1,26 @@
 package com.gmail.maloef.popularmovies.fetch;
 
-import android.test.AndroidTestCase;
-import android.util.Log;
-
 import com.gmail.maloef.popularmovies.Movie;
-import com.gmail.maloef.popularmovies.Review;
 import com.gmail.maloef.popularmovies.Trailer;
 
+import org.junit.Test;
+import org.mockito.Mockito;
+
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Markus on 18.11.2015.
  */
-public class TestMovieFetcher extends AndroidTestCase {
+public class TestMovieFetcher /*extends AndroidTestCase*/ {
 
-    private HttpUriRequester mockUriRequester = new HttpUriRequester();
+    private HttpUriRequester mockUriRequester = Mockito.mock(HttpUriRequester.class);
+//    private HttpUriRequester mockUriRequester = new HttpUriRequester();
 
     private JsonParser jsonParser = new JsonParser();
 
+    @Test
     public void testFetchMovies() {
         MovieFetcher fetcher = new MovieFetcher(mockUriRequester, jsonParser);
 
@@ -29,24 +32,14 @@ public class TestMovieFetcher extends AndroidTestCase {
         assertEquals("Spectre", movie.title);
     }
 
-    public void testFetchTrailers() {
+    @Test
+    public void testFetchTrailer() {
         MovieFetcher fetcher = new MovieFetcher(mockUriRequester, jsonParser);
 
         List<Trailer> trailers = fetcher.fetchTrailers(206647);
         assertEquals(3, trailers.size());
 
         assertEquals("Spectre Ultimate 007 Trailer 2015 HD", trailers.get(0).name);
-    }
-
-    public void testFetchReviews() {
-        MovieFetcher fetcher = new MovieFetcher(mockUriRequester, jsonParser);
-
-        List<Review> reviews = fetcher.fetchReviews(206647);
-        assertEquals(3, reviews.size());
-
-        assertEquals("cutprintchris", reviews.get(0).author);
-        Log.i(getClass().getSimpleName(), "content: " + reviews.get(0).content);
-        assertTrue(reviews.get(0).content.contains("In hindsight my excitement for Spectre seems a bit foolish."));
     }
 
 

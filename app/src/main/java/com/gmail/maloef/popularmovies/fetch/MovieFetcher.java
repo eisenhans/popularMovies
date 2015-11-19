@@ -4,15 +4,9 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.gmail.maloef.popularmovies.Movie;
-import com.gmail.maloef.popularmovies.MovieDataParser;
+import com.gmail.maloef.popularmovies.Review;
 import com.gmail.maloef.popularmovies.Trailer;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -25,9 +19,11 @@ public class MovieFetcher {
     public static final int SORT_BY_RELEASE_DATE = 1;
     public static final int SORT_BY_FAVORITES = 2;
 
-    private MovieDataParser parser;
+    private final HttpUriRequester httpUriRequester;
+    private JsonParser parser;
 
-    public MovieFetcher(MovieDataParser parser) {
+    public MovieFetcher(HttpUriRequester httpUriRequester, JsonParser parser) {
+        this.httpUriRequester = httpUriRequester;
         this.parser = parser;
     }
 
@@ -53,7 +49,7 @@ public class MovieFetcher {
                 .appendQueryParameter("sort_by", sortByParameter + ".desc")
                 .appendQueryParameter("api_key", ApiKeyHolder.API_KEY).build();
 
-        String json = readJson(uri);
+        String json = httpUriRequester.sendGet(uri);
         List<Movie> movies = parser.getMovies(json);
         Log.i(LOG_TAG, "looked up " + movies.size() + " movies in web");
 
@@ -71,59 +67,28 @@ public class MovieFetcher {
                 .appendPath("videos")
                 .appendQueryParameter("api_key", ApiKeyHolder.API_KEY).build();
 
-        String json = readJson(uri);
+        String json = httpUriRequester.sendGet(uri);
         List<Trailer> trailers = parser.getTrailers(json);
         Log.i(LOG_TAG, "Looked up trailers in web: " + trailers);
 
         return trailers;
     }
 
-    private String readJson(Uri uri) {
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
+    public List<Review> fetchReviews(int movieId) {
+        // example: http://api.themoviedb.org/3/movie/206647/reviews?api_key=<apiKey>
+        Uri uri = new Uri.Builder()
+                .scheme("http")
+                .authority("api.themoviedb.org")
+                .appendPath("3")
+                .appendPath("movie")
+                .appendPath(String.valueOf(movieId))
+                .appendPath("reviews")
+                .appendQueryParameter("api_key", ApiKeyHolder.API_KEY).build();
 
-        try {
-            URL url = new URL(uri.toString());
+        String json = httpUriRequester.sendGet(uri);
+        List<Review> reviews = parser.getReviews(json);
+        Log.i(LOG_TAG, "Looked up reviews in web: " + reviews);
 
-            // TODO the following contains a lot of boilerplate code - there must be an easier way!?
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuffer buffer = new StringBuffer();
-            if (inputStream == null) {
-                return null;
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                // But it does make debugging a *lot* easier if you print out the completed
-                // buffer for debugging.
-                buffer.append(line + "\n");
-            }
-
-            if (buffer.length() == 0) {
-                return null;
-            }
-            return buffer.toString();
-        } catch (IOException e) {
-
-            Log.e(LOG_TAG, "Error ", e);
-            return null;
-        } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException e) {
-                    Log.e(LOG_TAG, "Error closing stream", e);
-                }
-            }
-        }
+        return reviews;
     }
 }

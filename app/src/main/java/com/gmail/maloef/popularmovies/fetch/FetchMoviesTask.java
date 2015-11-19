@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.gmail.maloef.popularmovies.Movie;
-import com.gmail.maloef.popularmovies.MovieDataParser;
 import com.gmail.maloef.popularmovies.PosterAdapter;
 
 import java.util.List;
@@ -24,8 +23,9 @@ public class FetchMoviesTask extends AsyncTask<Integer, Void, List<Movie>> {
         if (params.length > 0) {
             sortBy = params[0];
         }
-        MovieDataParser parser = new MovieDataParser();
-        MovieFetcher fetcher = new MovieFetcher(parser);
+        HttpUriRequester httpUriRequester = new HttpUriRequester();
+        JsonParser parser = new JsonParser();
+        MovieFetcher fetcher = new MovieFetcher(httpUriRequester, parser);
 
         return fetcher.fetchMovies(sortBy);
     }
