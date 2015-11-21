@@ -2,9 +2,9 @@ package com.gmail.maloef.popularmovies.fetch;
 
 import android.util.Log;
 
-import com.gmail.maloef.popularmovies.Movie;
-import com.gmail.maloef.popularmovies.Review;
-import com.gmail.maloef.popularmovies.Trailer;
+import com.gmail.maloef.popularmovies.domain.Movie;
+import com.gmail.maloef.popularmovies.domain.Review;
+import com.gmail.maloef.popularmovies.domain.Trailer;
 
 import org.json.JSONArray;
 import org.json.JSONException;

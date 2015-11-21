@@ -1,7 +1,7 @@
 package com.gmail.maloef.popularmovies.fetch;
 
-import com.gmail.maloef.popularmovies.Movie;
-import com.gmail.maloef.popularmovies.Trailer;
+import com.gmail.maloef.popularmovies.domain.Movie;
+import com.gmail.maloef.popularmovies.domain.Trailer;
 
 import org.junit.Test;
 import org.mockito.Mockito;

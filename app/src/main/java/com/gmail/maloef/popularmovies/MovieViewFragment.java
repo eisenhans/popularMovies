@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.gmail.maloef.popularmovies.domain.Movie;
 import com.gmail.maloef.popularmovies.fetch.FetchMoviesTask;
 import com.gmail.maloef.popularmovies.fetch.MovieFetcher;
 

@@ -3,7 +3,7 @@ package com.gmail.maloef.popularmovies.fetch;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.gmail.maloef.popularmovies.Movie;
+import com.gmail.maloef.popularmovies.domain.Movie;
 import com.gmail.maloef.popularmovies.PosterAdapter;
 
 import java.util.List;

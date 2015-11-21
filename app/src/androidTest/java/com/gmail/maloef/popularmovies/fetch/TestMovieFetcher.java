@@ -3,9 +3,9 @@ package com.gmail.maloef.popularmovies.fetch;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
-import com.gmail.maloef.popularmovies.Movie;
-import com.gmail.maloef.popularmovies.Review;
-import com.gmail.maloef.popularmovies.Trailer;
+import com.gmail.maloef.popularmovies.domain.Movie;
+import com.gmail.maloef.popularmovies.domain.Review;
+import com.gmail.maloef.popularmovies.domain.Trailer;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class TestMovieFetcher extends AndroidTestCase {
         assertEquals(20, movies.size());
 
         Movie movie = movies.get(0);
-        assertEquals("Spectre", movie.title);
+        assertEquals("Ant-Man", movie.title);
     }
 
     public void testFetchTrailers() {
