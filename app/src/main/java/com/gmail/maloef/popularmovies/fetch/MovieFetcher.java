@@ -53,6 +53,16 @@ public class MovieFetcher {
         List<Movie> movies = parser.getMovies(json);
         Log.i(LOG_TAG, "looked up " + movies.size() + " movies in web");
 
+        for (Movie movie : movies) {
+            List<Trailer> trailers = fetchTrailers(movie.id);
+            movie.setTrailers(trailers);
+
+//            List<Review> reviews = fetchReviews(movie.id);
+//            movie.setReviews(reviews);
+
+//            Log.i(LOG_TAG, "looked up " + trailers.size() + " trailers and " + reviews.size() + " reviews for movie " + movie.title);
+        }
+
         return movies;
     }
 

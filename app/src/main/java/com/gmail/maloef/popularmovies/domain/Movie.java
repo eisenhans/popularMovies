@@ -3,6 +3,7 @@ package com.gmail.maloef.popularmovies.domain;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,8 +42,8 @@ public class Movie implements Parcelable {
     public String voteAverage;
     public String posterPath;
 
-    private List<Trailer> trailers;
-    private List<Review> reviews;
+    private List<Trailer> trailers = new ArrayList<>();
+    private List<Review> reviews = new ArrayList<>();
 
     public Integer getReleaseYear() {
         if (releaseDate == null || releaseDate.length() == 0) {

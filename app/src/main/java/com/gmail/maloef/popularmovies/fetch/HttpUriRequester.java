@@ -49,7 +49,7 @@ public class HttpUriRequester {
             return buffer.toString();
         } catch (IOException e) {
 
-            Log.e(LOG_TAG, "Error ", e);
+            Log.e(LOG_TAG, "Error fetching movie data\n", e);
             return null;
         } finally {
             if (urlConnection != null) {

@@ -20,6 +20,9 @@ public class JsonParser {
     private static String LOG_TAG = JsonParser.class.getSimpleName();
 
     public List<Movie> getMovies(String movieJsonString) {
+        if (movieJsonString == null) {
+            return new ArrayList<>();
+        }
         try {
             JSONObject jsonObject = new JSONObject(movieJsonString);
             JSONArray jsonMovies = (JSONArray) jsonObject.get("results");
@@ -52,6 +55,9 @@ public class JsonParser {
 //            "key":"BOVriTeIypQ",
 //            "name":"Spectre Ultimate 007 Trailer 2015 HD",
 //            "site":"YouTube",
+        if (trailerJsonString == null) {
+            return new ArrayList<>();
+        }
         try {
             JSONObject jsonObject = new JSONObject(trailerJsonString);
             JSONArray jsonTrailers = (JSONArray) jsonObject.get("results");
@@ -73,6 +79,9 @@ public class JsonParser {
     }
 
     public List<Review> getReviews(String reviewJsonString) {
+        if (reviewJsonString == null) {
+            return new ArrayList<>();
+        }
         try {
             JSONObject jsonObject = new JSONObject(reviewJsonString);
 
