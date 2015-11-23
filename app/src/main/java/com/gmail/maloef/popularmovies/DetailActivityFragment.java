@@ -3,15 +3,16 @@ package com.gmail.maloef.popularmovies;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gmail.maloef.popularmovies.domain.Movie;
+import com.gmail.maloef.popularmovies.domain.Trailer;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -41,11 +42,21 @@ public class DetailActivityFragment extends Fragment {
             setText(rootView, R.id.movie_vote_average, movie.voteAverage + "/10");
             setText(rootView, R.id.movie_overview, movie.overview);
 
-            TrailerAdapter trailerAdapter = new TrailerAdapter(movie.getTrailers());
+            LinearLayout detailLinearLayout = (LinearLayout) rootView.findViewById(R.id.detail_linear_layout);
+            for (int i = 0; i < movie.getTrailers().size(); i++) {
+                if (i == 0) {
+                    View sectionHeader = LayoutInflater.from(getContext()).inflate(R.layout.section_header, null);
+                    setText(sectionHeader, R.id.headerText, "Trailers:");
 
-            RecyclerView trailerRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview_trailer);
-            trailerRecyclerView.setAdapter(trailerAdapter);
-            trailerRecyclerView.setLayoutManager(new LinearLayoutManager(trailerRecyclerView.getContext()));
+                    detailLinearLayout.addView(sectionHeader);
+                }
+                Trailer trailer = movie.getTrailers().get(i);
+                View trailerView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_trailer, null);
+                setText(trailerView, R.id.list_item_trailer_name, trailer.name);
+
+                detailLinearLayout.addView(trailerView);
+                Log.i(LOG_TAG, "added trailer " + trailer.name + " to view " + trailerView);
+            }
         }
         return rootView;
     }
