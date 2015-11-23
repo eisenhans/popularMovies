@@ -1,12 +1,14 @@
 package com.gmail.maloef.popularmovies;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -50,15 +52,43 @@ public class DetailActivityFragment extends Fragment {
 
                     detailLinearLayout.addView(sectionHeader);
                 }
-                Trailer trailer = movie.getTrailers().get(i);
+                final Trailer trailer = movie.getTrailers().get(i);
                 View trailerView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_trailer, null);
-                setText(trailerView, R.id.list_item_trailer_name, trailer.name);
-
                 detailLinearLayout.addView(trailerView);
                 Log.i(LOG_TAG, "added trailer " + trailer.name + " to view " + trailerView);
+
+                setText(trailerView, R.id.list_item_trailer_name, trailer.name);
+
+                final ImageButton playButton = (ImageButton) trailerView.findViewById(R.id.list_item_trailer_button);
+
+                playButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Uri trailerUri = buildYoutubeUri(trailer.key);
+                        Intent playTrailerIntent = new Intent(Intent.ACTION_VIEW, trailerUri);
+                        if (playTrailerIntent.resolveActivity(getContext().getPackageManager()) != null) {
+                            startActivity(playTrailerIntent);
+                        } else {
+                            Log.i(LOG_TAG, "cannot start trailer - no receiving apps found");
+                        }
+                    }
+                });
+
             }
         }
         return rootView;
+    }
+
+    private Uri buildYoutubeUri(String trailerKey) {
+        //https://www.youtube.com/watch?v=BOVriTeIypQ&feature=youtu.be
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .authority("www.youtube.com")
+                .appendPath("watch")
+                .appendQueryParameter("v", trailerKey).build();
+
+        Log.i(LOG_TAG, "built uri " + uri);
+        return uri;
     }
 
     private void setText(View rootView, int textViewId, String text) {

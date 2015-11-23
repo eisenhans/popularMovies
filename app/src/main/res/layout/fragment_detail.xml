@@ -64,7 +64,7 @@
         <TextView android:id="@+id/dummy_text"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="with textparam 6"
+            android:text="with textparam 9"
             />
 
     </LinearLayout>
