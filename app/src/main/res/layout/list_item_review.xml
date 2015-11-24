@@ -4,14 +4,15 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:minHeight="?android:attr/listPreferredItemHeight"
-    android:padding="16dp">
+    android:paddingLeft="32dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    >
 
     <TextView
         android:id="@+id/list_item_review_author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
         android:layout_gravity="center_vertical"
         />
 

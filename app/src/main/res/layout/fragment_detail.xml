@@ -61,6 +61,13 @@
             android:layout_marginTop="5dp"
             />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="test 6"
+            />
+
     </LinearLayout>
 
 </ScrollView>

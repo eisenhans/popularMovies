@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,17 +21,18 @@ import com.gmail.maloef.popularmovies.domain.Movie;
 import com.gmail.maloef.popularmovies.domain.MovieDetails;
 import com.gmail.maloef.popularmovies.domain.Review;
 import com.gmail.maloef.popularmovies.domain.Trailer;
-import com.gmail.maloef.popularmovies.fetch.FetchMovieDetailsTask;
+import com.gmail.maloef.popularmovies.fetch.MovieDetailsLoader;
 import com.squareup.picasso.Picasso;
 
 /**
  * Created by Markus on 02.11.2015.
  */
-public class DetailActivityFragment extends Fragment implements FetchMovieDetailsTask.LoadFinishedListener {
+public class DetailActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<MovieDetails> {
     private static final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
 
     private Movie movie;
     private LinearLayout detailLinearLayout;
+    private boolean detailsInitialized;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,23 +61,27 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDetail
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        new FetchMovieDetailsTask(this).execute(movie);
+    public void onResume() {
+        super.onResume();
+        if (detailsInitialized) {
+            Log.i(LOG_TAG, "movieDetails for movie " + movie.title + " have already been initialized - won't do it again");
+            return;
+        }
+        Loader<MovieDetails> loader = getLoaderManager().initLoader(0, null, this);
+        Log.i(LOG_TAG, "created loader for movie " + movie.title + ": " + loader.getId());
     }
 
     @Override
-    public void onLoadFinished(MovieDetails movieDetails) {
+    public Loader<MovieDetails> onCreateLoader(int id, Bundle args) {
+        return new MovieDetailsLoader(getContext(), movie);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<MovieDetails> loader, MovieDetails  movieDetails) {
         Log.i(LOG_TAG, "showing details for movie " + movieDetails.movie.title + " with " +
                 movieDetails.trailers.size() + " trailers and " + movieDetails.reviews.size() + " reviews");
 
-        LayoutInflater inflater;
-        try {
-            inflater = LayoutInflater.from(getContext());
-        } catch (NullPointerException e) {
-            // user has clicked back button
-            return;
-        }
+        LayoutInflater inflater = LayoutInflater.from(getContext());
         for (int i = 0; i < movieDetails.trailers.size(); i++) {
             if (i == 0) {
                 View sectionHeader = inflater.inflate(R.layout.section_header, null);
@@ -115,8 +124,20 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDetail
             detailLinearLayout.addView(reviewView);
             Log.i(LOG_TAG, "added review by author " + review.author + " to view " + reviewView);
 
-            setText(reviewView, R.id.list_item_review_author, review.author);
+            CharSequence linkText = Html.fromHtml("<a href=\"" + review.url  + "\">" + review.author + "</a>");
+            Log.i(LOG_TAG, "created review link: " + linkText);
+
+            TextView urlTextView = (TextView) reviewView.findViewById( R.id.list_item_review_author);
+            urlTextView.setText(linkText);
+            urlTextView.setMovementMethod(LinkMovementMethod.getInstance());
         }
+
+        detailsInitialized = true;
+    }
+
+    @Override
+    public void onLoaderReset(Loader<MovieDetails> loader) {
+
     }
 
     private Uri buildYoutubeUri(String trailerKey) {
@@ -131,7 +152,7 @@ public class DetailActivityFragment extends Fragment implements FetchMovieDetail
         return uri;
     }
 
-    private void setText(View rootView, int textViewId, String text) {
+    private void setText(View rootView, int textViewId, CharSequence text) {
         TextView textView = (TextView) rootView.findViewById(textViewId);
         textView.setText(text);
     }

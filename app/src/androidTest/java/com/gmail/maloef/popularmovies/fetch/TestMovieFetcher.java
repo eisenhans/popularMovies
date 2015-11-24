@@ -1,6 +1,7 @@
 package com.gmail.maloef.popularmovies.fetch;
 
 import android.test.AndroidTestCase;
+import android.text.Spanned;
 import android.util.Log;
 
 import com.gmail.maloef.popularmovies.domain.Movie;
@@ -47,6 +48,9 @@ public class TestMovieFetcher extends AndroidTestCase {
         assertEquals("cutprintchris", reviews.get(0).author);
         Log.i(getClass().getSimpleName(), "content: " + reviews.get(0).content);
         assertTrue(reviews.get(0).content.contains("In hindsight my excitement for Spectre seems a bit foolish."));
+
+        Spanned htmlLink = reviews.get(0).getHtmlLink();
+        assertEquals("cutprintchris", htmlLink.toString());
     }
 
 

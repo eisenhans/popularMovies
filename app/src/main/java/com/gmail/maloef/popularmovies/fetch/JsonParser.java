@@ -93,8 +93,9 @@ public class JsonParser {
 
                 String author = jsonReview.getString("author");
                 String content = jsonReview.getString("content");
+                String url = jsonReview.getString("url");
 
-                reviews.add(new Review(author, content));
+                reviews.add(new Review(author, content, url));
             }
             return reviews;
         } catch (JSONException e) {
