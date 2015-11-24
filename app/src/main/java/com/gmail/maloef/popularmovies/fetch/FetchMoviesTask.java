@@ -9,7 +9,7 @@ import com.gmail.maloef.popularmovies.PosterAdapter;
 import java.util.List;
 
 public class FetchMoviesTask extends AsyncTask<Integer, Void, List<Movie>> {
-    private final String LOG_TAG = getClass().getName();
+    private static final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
 
     private PosterAdapter posterAdapter;
 

@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.gmail.maloef.popularmovies.domain.Movie;
+import com.gmail.maloef.popularmovies.domain.MovieDetails;
 import com.gmail.maloef.popularmovies.domain.Review;
 import com.gmail.maloef.popularmovies.domain.Trailer;
 
@@ -53,17 +54,16 @@ public class MovieFetcher {
         List<Movie> movies = parser.getMovies(json);
         Log.i(LOG_TAG, "looked up " + movies.size() + " movies in web");
 
-        for (Movie movie : movies) {
-            List<Trailer> trailers = fetchTrailers(movie.id);
-            movie.setTrailers(trailers);
-
-//            List<Review> reviews = fetchReviews(movie.id);
-//            movie.setReviews(reviews);
-
-//            Log.i(LOG_TAG, "looked up " + trailers.size() + " trailers and " + reviews.size() + " reviews for movie " + movie.title);
-        }
-
         return movies;
+    }
+
+    public MovieDetails fetchMovieDetails(Movie movie) {
+        MovieDetails details = new MovieDetails(movie);
+
+        details.trailers = fetchTrailers(movie.id);
+        details.reviews = fetchReviews(movie.id);
+
+        return details;
     }
 
     public List<Trailer> fetchTrailers(int movieId) {

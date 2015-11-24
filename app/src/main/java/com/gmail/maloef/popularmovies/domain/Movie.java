@@ -3,9 +3,6 @@ package com.gmail.maloef.popularmovies.domain;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Markus on 01.11.2015.
  */
@@ -22,8 +19,6 @@ public class Movie implements Parcelable {
             movie.releaseDate = source.readString();
             movie.voteAverage = source.readString();
             movie.posterPath = source.readString();
-            source.readTypedList(movie.trailers, Trailer.CREATOR);
-            source.readTypedList(movie.reviews, Review.CREATOR);
 
             return movie;
         }
@@ -42,9 +37,6 @@ public class Movie implements Parcelable {
     public String voteAverage;
     public String posterPath;
 
-    private List<Trailer> trailers = new ArrayList<>();
-    private List<Review> reviews = new ArrayList<>();
-
     public Integer getReleaseYear() {
         if (releaseDate == null || releaseDate.length() == 0) {
             return null;
@@ -61,22 +53,6 @@ public class Movie implements Parcelable {
         return "http://image.tmdb.org/t/p/w185/" + posterPath;
     }
 
-    public List<Trailer> getTrailers() {
-        return trailers;
-    }
-
-    public void setTrailers(List<Trailer> trailers) {
-        this.trailers = trailers;
-    }
-
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -91,8 +67,6 @@ public class Movie implements Parcelable {
         dest.writeString(releaseDate);
         dest.writeString(voteAverage);
         dest.writeString(posterPath);
-        dest.writeTypedList(trailers);
-        dest.writeTypedList(reviews);
     }
 
     @Override
