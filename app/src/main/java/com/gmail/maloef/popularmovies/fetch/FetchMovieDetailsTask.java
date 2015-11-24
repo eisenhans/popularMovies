@@ -12,10 +12,14 @@ import com.gmail.maloef.popularmovies.domain.MovieDetails;
 public class FetchMovieDetailsTask extends AsyncTask<Movie, Void, MovieDetails> {
     private static final String LOG_TAG = FetchMovieDetailsTask.class.getSimpleName();
 
-    private MovieDetails movieDetails;
+    public interface LoadFinishedListener {
+        void onLoadFinished(MovieDetails movieDetails);
+    }
 
-    public FetchMovieDetailsTask(MovieDetails movieDetails) {
-        this.movieDetails = movieDetails;
+    private LoadFinishedListener loadFinishedListener;
+
+    public FetchMovieDetailsTask(LoadFinishedListener loadFinishedListener) {
+        this.loadFinishedListener = loadFinishedListener;
     }
 
     @Override
@@ -25,15 +29,25 @@ public class FetchMovieDetailsTask extends AsyncTask<Movie, Void, MovieDetails> 
         JsonParser parser = new JsonParser();
         MovieFetcher fetcher = new MovieFetcher(httpUriRequester, parser);
 
+        Log.i(LOG_TAG, "simulating slow internet connection, waiting 5 sec");
+        try {
+            Thread.currentThread().sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Log.i(LOG_TAG, "waiting finished!");
+
         return fetcher.fetchMovieDetails(movie);
     }
 
     @Override
     protected void onPostExecute(MovieDetails movieDetails) {
-        this.movieDetails.trailers = movieDetails.trailers;
-        this.movieDetails.reviews = movieDetails.reviews;
 
         Log.i(LOG_TAG, "finished reading details for movie " + movieDetails.movie.title +
                 ": " + movieDetails.trailers.size() + " trailers and " + movieDetails.reviews.size() + " reviews");
+
+        if (loadFinishedListener != null) {
+            loadFinishedListener.onLoadFinished(movieDetails);
+        }
     }
 }

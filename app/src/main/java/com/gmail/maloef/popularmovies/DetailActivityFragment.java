@@ -2,7 +2,6 @@ package com.gmail.maloef.popularmovies;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -16,19 +15,18 @@ import android.widget.TextView;
 
 import com.gmail.maloef.popularmovies.domain.Movie;
 import com.gmail.maloef.popularmovies.domain.MovieDetails;
+import com.gmail.maloef.popularmovies.domain.Review;
 import com.gmail.maloef.popularmovies.domain.Trailer;
 import com.gmail.maloef.popularmovies.fetch.FetchMovieDetailsTask;
 import com.squareup.picasso.Picasso;
 
-import java.util.concurrent.ExecutionException;
-
 /**
  * Created by Markus on 02.11.2015.
  */
-public class DetailActivityFragment extends Fragment {
+public class DetailActivityFragment extends Fragment implements FetchMovieDetailsTask.LoadFinishedListener {
     private static final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
 
-    private MovieDetails movieDetails;
+    private Movie movie;
     private LinearLayout detailLinearLayout;
 
     @Override
@@ -37,8 +35,7 @@ public class DetailActivityFragment extends Fragment {
         Intent intent = getActivity().getIntent();
 
         if (intent != null && intent.hasExtra("movie")) {
-            Movie movie = (Movie) intent.getParcelableExtra("movie");
-            movieDetails = new MovieDetails(movie);
+            movie = (Movie) intent.getParcelableExtra("movie");
 
             ImageView imageView = (ImageView) rootView.findViewById(R.id.movie_poster_path);
             if (movie.getPosterUrl() == null) {
@@ -61,32 +58,30 @@ public class DetailActivityFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        showMovieDetails();
+        new FetchMovieDetailsTask(this).execute(movie);
     }
 
-    private void showMovieDetails() {
-        AsyncTask<Movie, Void, MovieDetails> asyncTask = new FetchMovieDetailsTask(movieDetails).execute(movieDetails.movie);
-        Log.i(LOG_TAG, "task status: " + asyncTask.getStatus());
-        try {
-            movieDetails = asyncTask.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
+    @Override
+    public void onLoadFinished(MovieDetails movieDetails) {
         Log.i(LOG_TAG, "showing details for movie " + movieDetails.movie.title + " with " +
                 movieDetails.trailers.size() + " trailers and " + movieDetails.reviews.size() + " reviews");
 
+        LayoutInflater inflater;
+        try {
+            inflater = LayoutInflater.from(getContext());
+        } catch (NullPointerException e) {
+            // user has clicked back button
+            return;
+        }
         for (int i = 0; i < movieDetails.trailers.size(); i++) {
             if (i == 0) {
-                View sectionHeader = LayoutInflater.from(getContext()).inflate(R.layout.section_header, null);
+                View sectionHeader = inflater.inflate(R.layout.section_header, null);
                 setText(sectionHeader, R.id.headerText, "Trailers:");
 
                 detailLinearLayout.addView(sectionHeader);
             }
             final Trailer trailer = movieDetails.trailers.get(i);
-            View trailerView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_trailer, null);
+            View trailerView = inflater.inflate(R.layout.list_item_trailer, null);
             detailLinearLayout.addView(trailerView);
             Log.i(LOG_TAG, "added trailer " + trailer.name + " to view " + trailerView);
 
@@ -108,20 +103,20 @@ public class DetailActivityFragment extends Fragment {
             });
         }
 
-//        for (int i = 0; i < movieDetails.reviews.size(); i++) {
-//            if (i == 0) {
-//                View sectionHeader = LayoutInflater.from(getContext()).inflate(R.layout.section_header, null);
-//                setText(sectionHeader, R.id.headerText, "Reviews:");
-//
-//                detailLinearLayout.addView(sectionHeader);
-//            }
-//            final Review review = movieDetails.reviews.get(i);
-//            View reviewView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_review, null);
-//            detailLinearLayout.addView(reviewView);
-//            Log.i(LOG_TAG, "added review by author " + review.author + " to view " + reviewView);
-//
-//            setText(reviewView, R.id.list_item_review_author, review.author);
-//        }
+        for (int i = 0; i < movieDetails.reviews.size(); i++) {
+            if (i == 0) {
+                View sectionHeader = inflater.inflate(R.layout.section_header, null);
+                setText(sectionHeader, R.id.headerText, "Reviews:");
+
+                detailLinearLayout.addView(sectionHeader);
+            }
+            final Review review = movieDetails.reviews.get(i);
+            View reviewView = inflater.inflate(R.layout.list_item_review, null);
+            detailLinearLayout.addView(reviewView);
+            Log.i(LOG_TAG, "added review by author " + review.author + " to view " + reviewView);
+
+            setText(reviewView, R.id.list_item_review_author, review.author);
+        }
     }
 
     private Uri buildYoutubeUri(String trailerKey) {
