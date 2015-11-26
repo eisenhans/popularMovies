@@ -11,7 +11,10 @@ public class Trailer implements Parcelable {
     public static final Creator<Trailer> CREATOR = new Creator<Trailer>() {
         @Override
         public Trailer createFromParcel(Parcel source) {
-            Trailer trailer = new Trailer(source.readString(), source.readString());
+            Trailer trailer = new Trailer();
+            trailer._id = source.readInt();
+            trailer.key = source.readString();
+            trailer.name = source.readString();
 
             return trailer;
         }
@@ -21,13 +24,9 @@ public class Trailer implements Parcelable {
         }
     };
 
+    public int _id;
     public String key;
     public String name;
-
-    public Trailer(String key, String name) {
-        this.key = key;
-        this.name = name;
-    }
 
     @Override
     public int describeContents() {
@@ -36,6 +35,7 @@ public class Trailer implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(_id);
         dest.writeString(key);
         dest.writeString(name);
     }
@@ -43,6 +43,7 @@ public class Trailer implements Parcelable {
     @Override
     public String toString() {
         return "Trailer{" +
+                "_id='" + _id + '\'' +
                 "key='" + key + '\'' +
                 ", name='" + name + '\'' +
                 '}';

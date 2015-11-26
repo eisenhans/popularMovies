@@ -12,7 +12,8 @@ public class Movie implements Parcelable {
         @Override
         public Movie createFromParcel(Parcel source) {
             Movie movie = new Movie();
-            movie.id = source.readInt();
+            movie._id = source.readInt();
+            movie.movieId = source.readInt();
             movie.title = source.readString();
             movie.originalTitle = source.readString();
             movie.overview = source.readString();
@@ -29,7 +30,8 @@ public class Movie implements Parcelable {
         }
     };
 
-    public Integer id;
+    public int _id;
+    public int movieId;
     public String title;
     public String originalTitle;
     public String overview;
@@ -60,7 +62,8 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeInt(_id);
+        dest.writeInt(movieId);
         dest.writeString(title);
         dest.writeString(originalTitle);
         dest.writeString(overview);
@@ -72,13 +75,14 @@ public class Movie implements Parcelable {
     @Override
     public String toString() {
         return "Movie{" +
+                "_id='" + _id + '\'' +
+                ", movieId=" + movieId +
+                ", title='" + title + '\'' +
+                ", originalTitle='" + originalTitle + '\'' +
                 "posterPath='" + posterPath + '\'' +
                 ", voteAverage='" + voteAverage + '\'' +
                 ", releaseDate='" + releaseDate + '\'' +
                 ", overview='" + overview + '\'' +
-                ", originalTitle='" + originalTitle + '\'' +
-                ", title='" + title + '\'' +
-                ", id=" + id +
                 '}';
     }
 }

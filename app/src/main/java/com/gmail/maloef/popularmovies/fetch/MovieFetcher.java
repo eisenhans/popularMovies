@@ -3,6 +3,7 @@ package com.gmail.maloef.popularmovies.fetch;
 import android.net.Uri;
 import android.util.Log;
 
+import com.gmail.maloef.popularmovies.BuildConfig;
 import com.gmail.maloef.popularmovies.domain.Movie;
 import com.gmail.maloef.popularmovies.domain.MovieDetails;
 import com.gmail.maloef.popularmovies.domain.Review;
@@ -48,7 +49,7 @@ public class MovieFetcher {
                 .appendPath("discover")
                 .appendPath("movie")
                 .appendQueryParameter("sort_by", sortByParameter + ".desc")
-                .appendQueryParameter("api_key", ApiKeyHolder.API_KEY).build();
+                .appendQueryParameter("api_key", BuildConfig.MOVIE_DB_API_KEY).build();
 
         String json = httpUriRequester.sendGet(uri);
         List<Movie> movies = parser.getMovies(json);
@@ -60,8 +61,8 @@ public class MovieFetcher {
     public MovieDetails fetchMovieDetails(Movie movie) {
         MovieDetails details = new MovieDetails(movie);
 
-        details.trailers = fetchTrailers(movie.id);
-        details.reviews = fetchReviews(movie.id);
+        details.trailers = fetchTrailers(movie.movieId);
+        details.reviews = fetchReviews(movie.movieId);
 
         return details;
     }
@@ -75,7 +76,7 @@ public class MovieFetcher {
                 .appendPath("movie")
                 .appendPath(String.valueOf(movieId))
                 .appendPath("videos")
-                .appendQueryParameter("api_key", ApiKeyHolder.API_KEY).build();
+                .appendQueryParameter("api_key", BuildConfig.MOVIE_DB_API_KEY).build();
 
         String json = httpUriRequester.sendGet(uri);
         List<Trailer> trailers = parser.getTrailers(json);
@@ -93,7 +94,7 @@ public class MovieFetcher {
                 .appendPath("movie")
                 .appendPath(String.valueOf(movieId))
                 .appendPath("reviews")
-                .appendQueryParameter("api_key", ApiKeyHolder.API_KEY).build();
+                .appendQueryParameter("api_key", BuildConfig.MOVIE_DB_API_KEY).build();
 
         String json = httpUriRequester.sendGet(uri);
         List<Review> reviews = parser.getReviews(json);

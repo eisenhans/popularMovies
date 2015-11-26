@@ -31,7 +31,7 @@ public class JsonParser {
             for (int i = 0; i < jsonMovies.length(); i++) {
                 Movie movie = new Movie();
                 JSONObject jsonMovie = (JSONObject) jsonMovies.get(i);
-                movie.id = jsonMovie.getInt("id");
+                movie.movieId = jsonMovie.getInt("id");
                 movie.title = jsonMovie.getString("title");
                 movie.originalTitle = jsonMovie.getString("original_title");
                 movie.releaseDate = jsonMovie.getString("release_date");
@@ -66,10 +66,10 @@ public class JsonParser {
             for (int i = 0; i < jsonTrailers.length(); i++) {
                 JSONObject jsonTrailer = (JSONObject) jsonTrailers.get(i);
 
-                String key = jsonTrailer.getString("key");
-                String name = jsonTrailer.getString("name");
-
-                trailers.add(new Trailer(key, name));
+                Trailer trailer = new Trailer();
+                trailer.key = jsonTrailer.getString("key");
+                trailer.name = jsonTrailer.getString("name");
+                trailers.add(trailer);
             }
             return trailers;
         } catch (JSONException e) {
@@ -91,11 +91,10 @@ public class JsonParser {
             for (int i = 0; i < jsonReviews.length(); i++) {
                 JSONObject jsonReview = (JSONObject) jsonReviews.get(i);
 
-                String author = jsonReview.getString("author");
-                String content = jsonReview.getString("content");
-                String url = jsonReview.getString("url");
-
-                reviews.add(new Review(author, content, url));
+                Review review = new Review();
+                review.author = jsonReview.getString("author");
+                review.url = jsonReview.getString("url");
+                reviews.add(review);
             }
             return reviews;
         } catch (JSONException e) {

@@ -35,6 +35,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+        <provider
+            android:authorities="com.gmail.maloef.popularmovies"
+            android:name="com.gmail.maloef.popularmovies.data.generated.MovieProvider"
+            android:exported="false" />
     </application>
 
 </manifest>
