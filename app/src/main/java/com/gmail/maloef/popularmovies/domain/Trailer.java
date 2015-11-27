@@ -15,6 +15,7 @@ public class Trailer implements Parcelable {
             trailer._id = source.readInt();
             trailer.key = source.readString();
             trailer.name = source.readString();
+            trailer.movie = source.readInt();
 
             return trailer;
         }
@@ -27,6 +28,7 @@ public class Trailer implements Parcelable {
     public int _id;
     public String key;
     public String name;
+    public int movie;
 
     @Override
     public int describeContents() {
@@ -38,6 +40,7 @@ public class Trailer implements Parcelable {
         dest.writeInt(_id);
         dest.writeString(key);
         dest.writeString(name);
+        dest.writeInt(movie);
     }
 
     @Override
@@ -46,6 +49,7 @@ public class Trailer implements Parcelable {
                 "_id='" + _id + '\'' +
                 "key='" + key + '\'' +
                 ", name='" + name + '\'' +
+                ", movie='" + movie + '\'' +
                 '}';
     }
 }

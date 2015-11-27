@@ -32,6 +32,10 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     apt 'net.simonvt.schematic:schematic-compiler:0.6.4'
     compile 'net.simonvt.schematic:schematic:0.6.4'
+
+    // TODO: remove stetho dependency for release, or use debugCompile
+    compile 'com.facebook.stetho:stetho:1.2.0'
+    compile 'com.facebook.stetho:stetho-okhttp:1.2.0'
 //    compile 'com.venmo.cursor:library:0.4'
 
     androidTestCompile ('com.android.support.test:runner:0.4.1') {

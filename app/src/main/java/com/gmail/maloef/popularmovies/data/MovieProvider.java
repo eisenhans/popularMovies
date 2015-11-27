@@ -69,7 +69,7 @@ public class MovieProvider {
          */
         @InexactContentUri(
                 path = Path.MOVIES + "/#/" + Path.TRAILERS,
-                name = "FIND_BY_MOVIE",
+                name = "FIND_TRAILER_BY_MOVIE",
                 type = "vnd.android.cursor.dir/trailer",
                 whereColumn = TrailerColumns.MOVIE,
                 pathSegment = 1,
@@ -78,19 +78,50 @@ public class MovieProvider {
             return Movie.findById(movie).buildUpon().appendPath(Path.TRAILERS).build();
         }
 
+//        /**
+//         * Finds a trailer by its key.
+//         *
+//         * Example: ...popularmovies/trailers/7GqClqvlObY
+//         */
+//        @InexactContentUri(
+//                path = Path.TRAILERS + "/*",
+//                name = "FIND_TRAILER_BY_KEY",
+//                type = "vnd.android.cursor.item/trailer",
+//                whereColumn = TrailerColumns.KEY,
+//                pathSegment = 1)
+//        public static Uri findByKey(String key) {
+//            return BASE_CONTENT_URI.buildUpon().appendPath(Path.TRAILERS).appendPath(key).build();
+//        }
+    }
+
+    @TableEndpoint(table = MovieDatabase.REVIEW)
+    public static class Review {
+
         /**
-         * Finds a trailer by its key.
+         * Finds all reviews.
+         * <p/>
+         * Example: ...popularmovies/reviews
+         */
+        @ContentUri(
+                path = Path.REVIEWS,
+                type = "vnd.android.cursor.dir/review",
+                defaultSort = ReviewColumns._ID + " desc")
+        public static final Uri REVIEWS = BASE_CONTENT_URI.buildUpon().appendPath(Path.REVIEWS).build();
+
+        /**
+         * Finds the list of reviews for one movie by the movie's database _id.
          *
-         * Example: ...popularmovies/trailers/7GqClqvlObY
+         * Example: ...popularmovies/movies/123/reviews
          */
         @InexactContentUri(
-                path = Path.TRAILERS + "/*",
-                name = "FIND_BY_KEY",
-                type = "vnd.android.cursor.item/trailer",
-                whereColumn = TrailerColumns.KEY,
-                pathSegment = 1)
-        public static Uri findByKey(String key) {
-            return BASE_CONTENT_URI.buildUpon().appendPath(Path.TRAILERS).appendPath(key).build();
+                path = Path.MOVIES + "/#/" + Path.REVIEWS,
+                name = "FIND_REVIEW_BY_MOVIE",
+                type = "vnd.android.cursor.dir/review",
+                whereColumn = ReviewColumns.MOVIE,
+                pathSegment = 1,
+                defaultSort = ReviewColumns._ID + " asc")
+        public static final Uri findByMovie(int movie) {
+            return Movie.findById(movie).buildUpon().appendPath(Path.REVIEWS).build();
         }
     }
 }

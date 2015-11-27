@@ -16,6 +16,7 @@ public class TrailerCursor extends CursorWrapper {
         trailer._id = getInt(getColumnIndex(TrailerColumns._ID));
         trailer.key = getString(getColumnIndex(TrailerColumns.KEY));
         trailer.name = getString(getColumnIndex(TrailerColumns.NAME));
+        trailer.movie = getInt(getColumnIndex(TrailerColumns.MOVIE));
 
         return trailer;
     }

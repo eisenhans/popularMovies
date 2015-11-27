@@ -11,6 +11,7 @@ import android.test.AndroidTestCase;
 import android.util.Log;
 
 import com.gmail.maloef.popularmovies.domain.Movie;
+import com.gmail.maloef.popularmovies.domain.Review;
 import com.gmail.maloef.popularmovies.domain.Trailer;
 
 public class MovieProviderTest extends AndroidTestCase {
@@ -18,7 +19,7 @@ public class MovieProviderTest extends AndroidTestCase {
     public void setUp() {
         ContentResolver contentResolver = mContext.getContentResolver();
         contentResolver.delete(MovieProvider.Trailer.TRAILERS, null, null);
-
+        contentResolver.delete(MovieProvider.Review.REVIEWS, null, null);
         contentResolver.delete(MovieProvider.Movie.MOVIES, null, null);
     }
 
@@ -73,7 +74,7 @@ public class MovieProviderTest extends AndroidTestCase {
         assertEquals("Youth", movieById.title);
     }
 
-    public void testInsertMovieWithTrailer() {
+    public void testInsertMovieWithTrailers() {
         ContentValues values = new ContentValues();
         values.put(MovieColumns.MOVIE_ID, 123);
         values.put(MovieColumns.TITLE, "Youth");
@@ -110,4 +111,35 @@ public class MovieProviderTest extends AndroidTestCase {
         assertEquals("Interview with director", trailer2.name);
     }
 
+    public void testInsertMovieWithReview() {
+        ContentValues values = new ContentValues();
+        values.put(MovieColumns.MOVIE_ID, 123);
+        values.put(MovieColumns.TITLE, "Youth");
+
+        ContentResolver contentResolver = mContext.getContentResolver();
+        contentResolver.insert(MovieProvider.Movie.MOVIES, values);
+
+        Cursor cursor = contentResolver.query(MovieProvider.Movie.MOVIES, null, null, null, null);
+        MovieCursor movieCursor = new MovieCursor(cursor);
+        movieCursor.moveToFirst();
+        int id = movieCursor.getMovie()._id;
+
+        ContentValues reviewValues = new ContentValues();
+        reviewValues.put(ReviewColumns.AUTHOR, "Rüdiger Suchsland");
+        reviewValues.put(ReviewColumns.URL, "http://abc.de");
+        reviewValues.put(TrailerColumns.MOVIE, id);
+        contentResolver.insert(MovieProvider.Review.REVIEWS, reviewValues);
+
+        ReviewCursor reviewCursor = new ReviewCursor(contentResolver.query(MovieProvider.Review.findByMovie(id), null, null, null, null));
+        assertEquals(1, reviewCursor.getCount());
+
+        reviewCursor.moveToFirst();
+        Review review = reviewCursor.getReview();
+        assertEquals("Rüdiger Suchsland", review.author);
+        assertEquals("http://abc.de", review.url);
+        assertEquals(id, review.movie);
+
+        ReviewCursor allReviewsCursor = new ReviewCursor(contentResolver.query(MovieProvider.Review.REVIEWS, null, null, null, null));
+        assertEquals(1, allReviewsCursor.getCount());
+    }
 }

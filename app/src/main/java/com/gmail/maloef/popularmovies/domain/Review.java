@@ -17,6 +17,7 @@ public class Review implements Parcelable {
             review._id = source.readInt();
             review.author = source.readString();
             review.url = source.readString();
+            review.movie = source.readInt();
 
             return review;
         }
@@ -29,6 +30,7 @@ public class Review implements Parcelable {
     public int _id;
     public String author;
     public String url;
+    public int movie;
 
     public Spanned getHtmlLink() {
         return Html.fromHtml("<a href=\"" + url + "\">" + author + "</a>");
@@ -44,6 +46,7 @@ public class Review implements Parcelable {
         dest.writeInt(_id);
         dest.writeString(author);
         dest.writeString(url);
+        dest.writeInt(movie);
     }
 
     @Override
@@ -52,6 +55,7 @@ public class Review implements Parcelable {
                 "_id='" + _id + '\'' +
                 "author='" + author + '\'' +
                 ", url='" + url + '\'' +
+                ", movie='" + movie + '\'' +
                 '}';
     }
 }
