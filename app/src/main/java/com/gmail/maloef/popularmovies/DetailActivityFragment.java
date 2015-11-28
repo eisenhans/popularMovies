@@ -12,10 +12,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gmail.maloef.popularmovies.domain.Movie;
 import com.gmail.maloef.popularmovies.domain.MovieDetails;
@@ -55,9 +57,21 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
             setText(rootView, R.id.movie_vote_average, movie.voteAverage + "/10");
             setText(rootView, R.id.movie_overview, movie.overview);
 
+            Button favoriteButton = (Button) rootView.findViewById(R.id.favorite_button);
+            favoriteButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Toast.makeText(getContext(), "Added to favorites", Toast.LENGTH_SHORT).show();
+                }
+            });
+
             detailLinearLayout = (LinearLayout) rootView.findViewById(R.id.detail_linear_layout);
         }
         return rootView;
+    }
+
+    private boolean isFavorite(Movie movie) {
+        return false;
+        //getContext().getContentResolver().query(MovieProvider.Movie.MOVIES
     }
 
     @Override

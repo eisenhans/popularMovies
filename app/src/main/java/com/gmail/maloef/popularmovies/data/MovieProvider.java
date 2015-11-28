@@ -36,15 +36,31 @@ public class MovieProvider {
         /**
          * Finds one movie by its database _id.
          *
-         * Example: ...popularmovies/movies/123         */
+         * Example: ...popularmovies/movies/123
+         */
         @InexactContentUri(
                 path = Path.MOVIES + "/#",
-                name = "FIND_BY_ID",
+                name = "MOVIE_BY_ID",
                 type = "vnd.android.cursor.item/movie",
                 whereColumn = MovieColumns._ID,
                 pathSegment = 1)
         public static Uri findById(int id) {
             return MOVIES.buildUpon().appendPath(String.valueOf(id)).build();
+        }
+
+        /**
+         * Finds one movie by its movieId (i.e. the id used by openMovieDb)
+         *
+         * Example: ...popularmovies/movies/byMovieId/7890
+         */
+        @InexactContentUri(
+                path = Path.MOVIES + "/byMovieId/#",
+                name = "MOVIE_BY_MOVIE_ID",
+                type = "vnd.android.cursor.item/movie",
+                whereColumn = MovieColumns.MOVIE_ID,
+                pathSegment = 2)
+        public static Uri findByMovieId(int movieId) {
+            return MOVIES.buildUpon().appendPath("byMovieId").appendPath(String.valueOf(movieId)).build();
         }
     }
 
@@ -69,7 +85,7 @@ public class MovieProvider {
          */
         @InexactContentUri(
                 path = Path.MOVIES + "/#/" + Path.TRAILERS,
-                name = "FIND_TRAILER_BY_MOVIE",
+                name = "TRAILERS_BY_MOVIE",
                 type = "vnd.android.cursor.dir/trailer",
                 whereColumn = TrailerColumns.MOVIE,
                 pathSegment = 1,
@@ -115,7 +131,7 @@ public class MovieProvider {
          */
         @InexactContentUri(
                 path = Path.MOVIES + "/#/" + Path.REVIEWS,
-                name = "FIND_REVIEW_BY_MOVIE",
+                name = "REVIEWS_BY_MOVIE",
                 type = "vnd.android.cursor.dir/review",
                 whereColumn = ReviewColumns.MOVIE,
                 pathSegment = 1,

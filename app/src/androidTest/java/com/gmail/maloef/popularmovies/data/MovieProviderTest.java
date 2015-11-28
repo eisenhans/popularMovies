@@ -15,6 +15,7 @@ import com.gmail.maloef.popularmovies.domain.Review;
 import com.gmail.maloef.popularmovies.domain.Trailer;
 
 public class MovieProviderTest extends AndroidTestCase {
+    private static final String LOG_TAG = MovieProviderTest.class.getSimpleName();
 
     public void setUp() {
         ContentResolver contentResolver = mContext.getContentResolver();
@@ -39,19 +40,14 @@ public class MovieProviderTest extends AndroidTestCase {
     }
 
     public void testInsertMovie() {
-        ContentValues values = new ContentValues();
-        values.put(MovieColumns.MOVIE_ID, 123);
-        values.put(MovieColumns.TITLE, "Youth");
+        insertMovie(123, "Youth");
 
-        ContentResolver contentResolver = mContext.getContentResolver();
-        contentResolver.insert(MovieProvider.Movie.MOVIES, values);
-
-        Cursor cursor = contentResolver.query(MovieProvider.Movie.MOVIES, null, null, null, null);
+        Cursor cursor = getContentResolver().query(MovieProvider.Movie.MOVIES, null, null, null, null);
         MovieCursor movieCursor = new MovieCursor(cursor);
         assertEquals(1, movieCursor.getCount());
         assertTrue(movieCursor.moveToFirst());
 
-        com.gmail.maloef.popularmovies.domain.Movie movie = movieCursor.getMovie();
+        Movie movie = movieCursor.getMovie();
 
         int id = cursor.getInt(cursor.getColumnIndex(MovieColumns._ID));
 
@@ -63,26 +59,41 @@ public class MovieProviderTest extends AndroidTestCase {
         assertEquals("Youth", title);
         assertEquals("Youth", movie.title);
 
-        Cursor byIdCursor = contentResolver.query(MovieProvider.Movie.findById(id), null, null, null, null);
+        Cursor byIdCursor = getContentResolver().query(MovieProvider.Movie.findById(id), null, null, null, null);
         MovieCursor movieByIdCursor = new MovieCursor(byIdCursor);
         assertEquals(1, movieByIdCursor.getCount());
         assertTrue(movieByIdCursor.moveToFirst());
 
         Movie movieById = movieCursor.getMovie();
-        Log.i(getClass().getSimpleName(), "Movie from db: " + movieById);
+        Log.i(getClass().getSimpleName(), "Movie from db by _id: " + movieById);
         assertEquals(123, movieById.movieId);
         assertEquals("Youth", movieById.title);
+
+        Cursor byMovieIdCursor = getContentResolver().query(MovieProvider.Movie.findByMovieId(123), null, null, null, null);
+        MovieCursor movieByMovieIdCursor = new MovieCursor(byMovieIdCursor);
+        assertEquals(1, movieByMovieIdCursor.getCount());
+        assertTrue(movieByMovieIdCursor.moveToFirst());
+
+        Movie movieByMovieId = movieByMovieIdCursor.getMovie();
+        Log.i(LOG_TAG, "Movie from db by movieId: " + movieByMovieId);
+        assertEquals(123, movieByMovieId.movieId);
+        assertEquals("Youth", movieByMovieId.title);
+    }
+
+    public void testFindMovieByMovieId() {
+        insertMovie(123, "Youth");
+        insertMovie(124, "Spectre");
+
+        MovieCursor movieCursor = new MovieCursor(getContentResolver().query(MovieProvider.Movie.findByMovieId(123), null, null, null, null));
+        assertEquals(1, movieCursor.getCount());
+        movieCursor.moveToFirst();
+        assertEquals("Youth", movieCursor.getMovie().title);
     }
 
     public void testInsertMovieWithTrailers() {
-        ContentValues values = new ContentValues();
-        values.put(MovieColumns.MOVIE_ID, 123);
-        values.put(MovieColumns.TITLE, "Youth");
+        insertMovie(123, "Youth");
 
-        ContentResolver contentResolver = mContext.getContentResolver();
-        contentResolver.insert(MovieProvider.Movie.MOVIES, values);
-
-        Cursor cursor = contentResolver.query(MovieProvider.Movie.MOVIES, null, null, null, null);
+        Cursor cursor = getContentResolver().query(MovieProvider.Movie.MOVIES, null, null, null, null);
         MovieCursor movieCursor = new MovieCursor(cursor);
         movieCursor.moveToFirst();
         int id = movieCursor.getMovie()._id;
@@ -91,15 +102,15 @@ public class MovieProviderTest extends AndroidTestCase {
         trailerValues1.put(TrailerColumns.KEY, "abc123");
         trailerValues1.put(TrailerColumns.NAME, "Youth official trailer");
         trailerValues1.put(TrailerColumns.MOVIE, id);
-        contentResolver.insert(MovieProvider.Trailer.TRAILERS, trailerValues1);
+        getContentResolver().insert(MovieProvider.Trailer.TRAILERS, trailerValues1);
 
         ContentValues trailerValues2 = new ContentValues();
         trailerValues2.put(TrailerColumns.KEY, "woitw83489");
         trailerValues2.put(TrailerColumns.NAME, "Interview with director");
         trailerValues2.put(TrailerColumns.MOVIE, id);
-        contentResolver.insert(MovieProvider.Trailer.TRAILERS, trailerValues2);
+        getContentResolver().insert(MovieProvider.Trailer.TRAILERS, trailerValues2);
 
-        TrailerCursor trailerCursor = new TrailerCursor(contentResolver.query(MovieProvider.Trailer.findByMovie(id), null, null, null, null));
+        TrailerCursor trailerCursor = new TrailerCursor(getContentResolver().query(MovieProvider.Trailer.findByMovie(id), null, null, null, null));
         assertEquals(2, trailerCursor.getCount());
 
         trailerCursor.moveToFirst();
@@ -112,14 +123,9 @@ public class MovieProviderTest extends AndroidTestCase {
     }
 
     public void testInsertMovieWithReview() {
-        ContentValues values = new ContentValues();
-        values.put(MovieColumns.MOVIE_ID, 123);
-        values.put(MovieColumns.TITLE, "Youth");
+        insertMovie(123, "Youth");
 
-        ContentResolver contentResolver = mContext.getContentResolver();
-        contentResolver.insert(MovieProvider.Movie.MOVIES, values);
-
-        Cursor cursor = contentResolver.query(MovieProvider.Movie.MOVIES, null, null, null, null);
+        Cursor cursor = getContentResolver().query(MovieProvider.Movie.MOVIES, null, null, null, null);
         MovieCursor movieCursor = new MovieCursor(cursor);
         movieCursor.moveToFirst();
         int id = movieCursor.getMovie()._id;
@@ -128,9 +134,9 @@ public class MovieProviderTest extends AndroidTestCase {
         reviewValues.put(ReviewColumns.AUTHOR, "Rüdiger Suchsland");
         reviewValues.put(ReviewColumns.URL, "http://abc.de");
         reviewValues.put(TrailerColumns.MOVIE, id);
-        contentResolver.insert(MovieProvider.Review.REVIEWS, reviewValues);
+        getContentResolver().insert(MovieProvider.Review.REVIEWS, reviewValues);
 
-        ReviewCursor reviewCursor = new ReviewCursor(contentResolver.query(MovieProvider.Review.findByMovie(id), null, null, null, null));
+        ReviewCursor reviewCursor = new ReviewCursor(getContentResolver().query(MovieProvider.Review.findByMovie(id), null, null, null, null));
         assertEquals(1, reviewCursor.getCount());
 
         reviewCursor.moveToFirst();
@@ -139,7 +145,20 @@ public class MovieProviderTest extends AndroidTestCase {
         assertEquals("http://abc.de", review.url);
         assertEquals(id, review.movie);
 
-        ReviewCursor allReviewsCursor = new ReviewCursor(contentResolver.query(MovieProvider.Review.REVIEWS, null, null, null, null));
+        ReviewCursor allReviewsCursor = new ReviewCursor(getContentResolver().query(MovieProvider.Review.REVIEWS, null, null, null, null));
         assertEquals(1, allReviewsCursor.getCount());
+    }
+
+    private ContentResolver getContentResolver() {
+        return mContext.getContentResolver();
+    }
+
+    private void insertMovie(int movieId, String title) {
+        ContentValues values = new ContentValues();
+        values.put(MovieColumns.MOVIE_ID, movieId);
+        values.put(MovieColumns.TITLE, title);
+
+        ContentResolver contentResolver = mContext.getContentResolver();
+        contentResolver.insert(MovieProvider.Movie.MOVIES, values);
     }
 }
