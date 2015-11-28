@@ -48,20 +48,20 @@ public class MovieProvider {
             return MOVIES.buildUpon().appendPath(String.valueOf(id)).build();
         }
 
-        /**
-         * Finds one movie by its movieId (i.e. the id used by openMovieDb)
-         *
-         * Example: ...popularmovies/movies/byMovieId/7890
-         */
-        @InexactContentUri(
-                path = Path.MOVIES + "/byMovieId/#",
-                name = "MOVIE_BY_MOVIE_ID",
-                type = "vnd.android.cursor.item/movie",
-                whereColumn = MovieColumns.MOVIE_ID,
-                pathSegment = 2)
-        public static Uri findByMovieId(int movieId) {
-            return MOVIES.buildUpon().appendPath("byMovieId").appendPath(String.valueOf(movieId)).build();
-        }
+//        /**
+//         * Finds one movie by its movieId (i.e. the id used by openMovieDb)
+//         *
+//         * Example: ...popularmovies/movies/byMovieId/7890
+//         */
+//        @InexactContentUri(
+//                path = Path.MOVIES + "/byMovieId/#",
+//                name = "MOVIE_BY_MOVIE_ID",
+//                type = "vnd.android.cursor.item/movie",
+//                whereColumn = MovieColumns.MOVIE_ID,
+//                pathSegment = 2)
+//        public static Uri findByMovieId(int movieId) {
+//            return MOVIES.buildUpon().appendPath("byMovieId").appendPath(String.valueOf(movieId)).build();
+//        }
     }
 
     @TableEndpoint(table = MovieDatabase.TRAILER)

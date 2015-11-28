@@ -1,6 +1,9 @@
 package com.gmail.maloef.popularmovies;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gmail.maloef.popularmovies.data.ContentValuesUtil;
+import com.gmail.maloef.popularmovies.data.MovieProvider;
 import com.gmail.maloef.popularmovies.domain.Movie;
 import com.gmail.maloef.popularmovies.domain.MovieDetails;
 import com.gmail.maloef.popularmovies.domain.Review;
@@ -33,8 +38,8 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     private static final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
 
     private Movie movie;
+    private MovieDetails movieDetails;
     private LinearLayout detailLinearLayout;
-    private boolean detailsInitialized;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,10 +62,22 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
             setText(rootView, R.id.movie_vote_average, movie.voteAverage + "/10");
             setText(rootView, R.id.movie_overview, movie.overview);
 
-            Button favoriteButton = (Button) rootView.findViewById(R.id.favorite_button);
+            final Button favoriteButton = (Button) rootView.findViewById(R.id.favorite_button);
+            favoriteButton.setText(isFavorite(movie) ? "Remove from favorites" : "Add to favorites");
+
             favoriteButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Toast.makeText(getContext(), "Added to favorites", Toast.LENGTH_SHORT).show();
+                    if (isFavorite(movie)) {
+                        removeFromFavorites(movie);
+                        favoriteButton.setText("Add to favorites");
+                        Toast.makeText(getContext(), "Removed from favorites", Toast.LENGTH_SHORT).show();
+                        Log.i(LOG_TAG, "removed " + movie.title + " from favorites");
+                    } else {
+                        addToFavorites(movie);
+                        favoriteButton.setText("Remove from favorites");
+                        Toast.makeText(getContext(), "Added to favorites", Toast.LENGTH_SHORT).show();
+                        Log.i(LOG_TAG, "added " + movie.title + " to favorites");
+                    }
                 }
             });
 
@@ -70,14 +87,41 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     }
 
     private boolean isFavorite(Movie movie) {
-        return false;
-        //getContext().getContentResolver().query(MovieProvider.Movie.MOVIES
+        Cursor cursor = getContentResolver().query(
+                MovieProvider.Movie.MOVIES,
+                new String[]{"_id"},
+                "movieId = ?",
+                new String[]{String.valueOf(movie.movieId)},
+                null);
+
+        boolean favorite = cursor.moveToFirst();
+        cursor.close();
+        return favorite;
+    }
+
+    private void addToFavorites(Movie movie) {
+        ContentValues contentValues = ContentValuesUtil.fromMovie(movie);
+        getContentResolver().insert(MovieProvider.Movie.MOVIES, contentValues);
+
+        ContentValues[] trailerValues = ContentValuesUtil.fromTrailers(movieDetails.trailers);
+        getContentResolver().bulkInsert(MovieProvider.Trailer.TRAILERS, trailerValues);
+
+        ContentValues[] reviewValues = ContentValuesUtil.fromReviews(movieDetails.reviews);
+        getContentResolver().bulkInsert(MovieProvider.Review.REVIEWS, reviewValues);
+    }
+
+    private void removeFromFavorites(Movie movie) {
+        getContentResolver().delete(MovieProvider.Movie.MOVIES, "movieId = ?", new String[]{String.valueOf(movie.movieId)});
+    }
+
+    private ContentResolver getContentResolver() {
+        return getContext().getContentResolver();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (detailsInitialized) {
+        if (movieDetails != null) {
             Log.i(LOG_TAG, "movieDetails for movie " + movie.title + " have already been initialized - won't do it again");
             return;
         }
@@ -95,6 +139,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
         Log.i(LOG_TAG, "showing details for movie " + movieDetails.movie.title + " with " +
                 movieDetails.trailers.size() + " trailers and " + movieDetails.reviews.size() + " reviews");
 
+        this.movieDetails = movieDetails;
         LayoutInflater inflater = LayoutInflater.from(getContext());
         for (int i = 0; i < movieDetails.trailers.size(); i++) {
             if (i == 0) {
@@ -145,8 +190,6 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
             urlTextView.setText(linkText);
             urlTextView.setMovementMethod(LinkMovementMethod.getInstance());
         }
-
-        detailsInitialized = true;
     }
 
     @Override

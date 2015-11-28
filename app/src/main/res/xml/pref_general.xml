@@ -4,10 +4,10 @@
     android:layout_height="match_parent">
 
     <ListPreference
-        android:key="@string/sort_by_key"
-        android:title="@string/sort_by_title"
-        android:entries="@array/sort_by_entries"
-        android:entryValues="@array/sort_by_entry_values"
-        android:defaultValue="@string/sort_by_entry_value_popularity" />
+        android:key="@string/movie_selection_key"
+        android:title="@string/movie_selection_title"
+        android:entries="@array/movie_selection_entries"
+        android:entryValues="@array/movie_selection_entry_values"
+        android:defaultValue="@string/movie_selection_entry_value_most_popular_first" />
 
 </PreferenceScreen>

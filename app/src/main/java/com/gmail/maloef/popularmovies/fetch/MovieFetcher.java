@@ -19,7 +19,7 @@ public class MovieFetcher {
 
     public static final int SORT_BY_POPULARITY = 0;
     public static final int SORT_BY_RELEASE_DATE = 1;
-    public static final int SORT_BY_FAVORITES = 2;
+    public static final int FAVORITES_ONLY = 2;
 
     private final HttpUriRequester httpUriRequester;
     private JsonParser parser;
@@ -33,13 +33,17 @@ public class MovieFetcher {
         switch (sortBy) {
             case SORT_BY_POPULARITY: return "popularity";
             case SORT_BY_RELEASE_DATE: return "release_date";
-            case SORT_BY_FAVORITES: throw new UnsupportedOperationException("not implemented yet");
+            case FAVORITES_ONLY: return "favorites_only";
             default: throw new IllegalArgumentException("sortBy: " + sortBy);
         }
     }
 
     public List<Movie> fetchMovies(int sortBy) {
         String sortByParameter = sortByParameter(sortBy);
+
+        if (sortByParameter.equals("favorites_only")) {
+
+        }
 
         // example: http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=<apiKey>;
         Uri uri = new Uri.Builder()

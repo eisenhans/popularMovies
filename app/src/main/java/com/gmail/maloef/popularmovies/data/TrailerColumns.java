@@ -2,9 +2,13 @@ package com.gmail.maloef.popularmovies.data;
 
 import net.simonvt.schematic.annotation.DataType;
 import net.simonvt.schematic.annotation.NotNull;
+import net.simonvt.schematic.annotation.PrimaryKey;
 import net.simonvt.schematic.annotation.References;
 
-public interface TrailerColumns extends BaseColumns {
+public interface TrailerColumns {
+
+    @DataType(DataType.Type.INTEGER) @PrimaryKey
+    String _ID = "_id";
 
     @DataType(DataType.Type.TEXT) @NotNull
     String KEY = "key";

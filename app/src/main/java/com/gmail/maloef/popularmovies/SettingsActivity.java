@@ -17,7 +17,7 @@ public class SettingsActivity extends PreferenceActivity
 
         // For all preferences, attach an OnPreferenceChangeListener so the UI summary can be
         // updated when the preference changes.
-        bindPreferenceSummaryToValue(findPreference("sort_by"));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.movie_selection_key)));
     }
 
     /**

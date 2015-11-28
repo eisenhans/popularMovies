@@ -69,7 +69,12 @@ public class MovieProviderTest extends AndroidTestCase {
         assertEquals(123, movieById.movieId);
         assertEquals("Youth", movieById.title);
 
-        Cursor byMovieIdCursor = getContentResolver().query(MovieProvider.Movie.findByMovieId(123), null, null, null, null);
+        Cursor byMovieIdCursor = getContentResolver().query(
+                MovieProvider.Movie.MOVIES,
+                null,
+                "movieId = ?",
+                new String[]{String.valueOf(movie.movieId)},
+                null);
         MovieCursor movieByMovieIdCursor = new MovieCursor(byMovieIdCursor);
         assertEquals(1, movieByMovieIdCursor.getCount());
         assertTrue(movieByMovieIdCursor.moveToFirst());
@@ -78,16 +83,24 @@ public class MovieProviderTest extends AndroidTestCase {
         Log.i(LOG_TAG, "Movie from db by movieId: " + movieByMovieId);
         assertEquals(123, movieByMovieId.movieId);
         assertEquals("Youth", movieByMovieId.title);
+
+        movieCursor.close();
     }
 
     public void testFindMovieByMovieId() {
         insertMovie(123, "Youth");
         insertMovie(124, "Spectre");
 
-        MovieCursor movieCursor = new MovieCursor(getContentResolver().query(MovieProvider.Movie.findByMovieId(123), null, null, null, null));
+        MovieCursor movieCursor = new MovieCursor(getContentResolver().query(
+                MovieProvider.Movie.MOVIES,
+                null,
+                "movieId = ?",
+                new String[]{String.valueOf(123)},
+                null));
         assertEquals(1, movieCursor.getCount());
         movieCursor.moveToFirst();
         assertEquals("Youth", movieCursor.getMovie().title);
+        movieCursor.close();
     }
 
     public void testInsertMovieWithTrailers() {

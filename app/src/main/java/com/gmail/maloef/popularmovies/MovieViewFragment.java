@@ -63,20 +63,20 @@ public class MovieViewFragment extends Fragment {
 
     private Integer sortCriteria() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String sortBy = prefs.getString(
-                getString(R.string.sort_by_key), getString(R.string.sort_by_entry_value_popularity));
+        String movieSelection = prefs.getString(
+                getString(R.string.movie_selection_key), getString(R.string.movie_selection_entry_value_most_popular_first));
 
         // TODO: replace with constants from MovieFetcher
-        if (sortBy.equals("popularity")) {
+        if (movieSelection.equals(getString(R.string.movie_selection_entry_value_most_popular_first))) {
             return MovieFetcher.SORT_BY_POPULARITY;
         }
-        if (sortBy.equals("release_date")) {
+        if (movieSelection.equals(getString(R.string.movie_selection_entry_value_newest_first))) {
             return MovieFetcher.SORT_BY_RELEASE_DATE;
         }
-        if (sortBy.equals("release_date")) {
-            return MovieFetcher.SORT_BY_RELEASE_DATE;
+        if (movieSelection.equals(getString(R.string.movie_selection_entry_value_favorites_only))) {
+            return MovieFetcher.FAVORITES_ONLY;
         }
-        Log.w(LOG_TAG, "unexpected sortBy preference: " +  sortBy + " - using SORT_BY_POPULARITY");
+        Log.w(LOG_TAG, "unexpected movieSelection preference: " +  movieSelection + " - using SORT_BY_POPULARITY");
         return MovieFetcher.SORT_BY_POPULARITY;
     }
 }
