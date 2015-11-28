@@ -21,7 +21,7 @@ public class TestMovieFetcher extends AndroidTestCase {
     public void testFetchMovies() {
         MovieFetcher fetcher = new MovieFetcher(mockUriRequester, jsonParser);
 
-        List<Movie> movies = fetcher.fetchMovies(MovieFetcher.SORT_BY_POPULARITY);
+        List<Movie> movies = fetcher.fetchMoviesByPopularity();
 
         assertEquals(20, movies.size());
 
@@ -35,7 +35,7 @@ public class TestMovieFetcher extends AndroidTestCase {
         List<Trailer> trailers = fetcher.fetchTrailers(206647);
         assertEquals(3, trailers.size());
 
-        assertEquals("Spectre Ultimate 007 Trailer 2015 HD", trailers.get(0).name);
+        assertEquals("Spectre Ultimate 007 Trailer", trailers.get(0).name);
     }
 
     public void testFetchReviews() {

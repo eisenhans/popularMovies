@@ -17,10 +17,6 @@ import java.util.List;
 public class MovieFetcher {
     private static final String LOG_TAG = MovieFetcher.class.getSimpleName();
 
-    public static final int SORT_BY_POPULARITY = 0;
-    public static final int SORT_BY_RELEASE_DATE = 1;
-    public static final int FAVORITES_ONLY = 2;
-
     private final HttpUriRequester httpUriRequester;
     private JsonParser parser;
 
@@ -29,22 +25,15 @@ public class MovieFetcher {
         this.parser = parser;
     }
 
-    private String sortByParameter(int sortBy) {
-        switch (sortBy) {
-            case SORT_BY_POPULARITY: return "popularity";
-            case SORT_BY_RELEASE_DATE: return "release_date";
-            case FAVORITES_ONLY: return "favorites_only";
-            default: throw new IllegalArgumentException("sortBy: " + sortBy);
-        }
+    public List<Movie> fetchMoviesByPopularity() {
+        return fetchMovies("popularity");
     }
 
-    public List<Movie> fetchMovies(int sortBy) {
-        String sortByParameter = sortByParameter(sortBy);
+    public List<Movie> fetchMoviesByReleaseDate() {
+        return fetchMovies("release_date");
+    }
 
-        if (sortByParameter.equals("favorites_only")) {
-
-        }
-
+    private List<Movie> fetchMovies(String sortBy) {
         // example: http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=<apiKey>;
         Uri uri = new Uri.Builder()
                 .scheme("http")
@@ -52,7 +41,7 @@ public class MovieFetcher {
                 .appendPath("3")
                 .appendPath("discover")
                 .appendPath("movie")
-                .appendQueryParameter("sort_by", sortByParameter + ".desc")
+                .appendQueryParameter("sort_by", sortBy + ".desc")
                 .appendQueryParameter("api_key", BuildConfig.MOVIE_DB_API_KEY).build();
 
         String json = httpUriRequester.sendGet(uri);

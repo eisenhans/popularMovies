@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import android.widget.GridView;
 
 import com.gmail.maloef.popularmovies.domain.Movie;
 import com.gmail.maloef.popularmovies.fetch.FetchMoviesTask;
-import com.gmail.maloef.popularmovies.fetch.MovieFetcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,25 +56,14 @@ public class MovieViewFragment extends Fragment {
     }
 
     private void updateMovies() {
-        new FetchMoviesTask(posterAdapter).execute(sortCriteria());
+        new FetchMoviesTask(getActivity(), posterAdapter).execute(movieSelection());
     }
 
-    private Integer sortCriteria() {
+    private String movieSelection() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String movieSelection = prefs.getString(
                 getString(R.string.movie_selection_key), getString(R.string.movie_selection_entry_value_most_popular_first));
 
-        // TODO: replace with constants from MovieFetcher
-        if (movieSelection.equals(getString(R.string.movie_selection_entry_value_most_popular_first))) {
-            return MovieFetcher.SORT_BY_POPULARITY;
-        }
-        if (movieSelection.equals(getString(R.string.movie_selection_entry_value_newest_first))) {
-            return MovieFetcher.SORT_BY_RELEASE_DATE;
-        }
-        if (movieSelection.equals(getString(R.string.movie_selection_entry_value_favorites_only))) {
-            return MovieFetcher.FAVORITES_ONLY;
-        }
-        Log.w(LOG_TAG, "unexpected movieSelection preference: " +  movieSelection + " - using SORT_BY_POPULARITY");
-        return MovieFetcher.SORT_BY_POPULARITY;
+        return movieSelection;
     }
 }
