@@ -9,10 +9,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -31,15 +36,18 @@ import com.gmail.maloef.popularmovies.domain.Trailer;
 import com.gmail.maloef.popularmovies.fetch.MovieDetailsLoader;
 import com.squareup.picasso.Picasso;
 
-/**
- * Created by Markus on 02.11.2015.
- */
 public class DetailActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<MovieDetails> {
     private static final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
 
     private Movie movie;
     private MovieDetails movieDetails;
     private LinearLayout detailLinearLayout;
+
+    private ShareActionProvider shareActionProvider;
+
+    public DetailActivityFragment() {
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -190,11 +198,43 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
             urlTextView.setText(linkText);
             urlTextView.setMovementMethod(LinkMovementMethod.getInstance());
         }
+        updateShareIntent();
     }
 
     @Override
     public void onLoaderReset(Loader<MovieDetails> loader) {
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.detailfragment, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_share_first_trailer);
+
+        shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+        updateShareIntent();
+    }
+
+    private void updateShareIntent() {
+        // If the ShareActionProvider has been created in onCreateOptionsMenu() and the movieDetails have
+        // been initialized in onLoadFinished(), we can set the shareIntent.
+        if (shareActionProvider != null && movieDetails != null && !movieDetails.trailers.isEmpty()) {
+            String firstTrailerKey = movieDetails.trailers.get(0).key;
+            shareActionProvider.setShareIntent(createShareFirstTrailerIntent(firstTrailerKey));
+        }
+    }
+
+    private Intent createShareFirstTrailerIntent(String firstTrailerKey) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        shareIntent.setType("text/plain");
+
+        String uriString = buildYoutubeUri(firstTrailerKey).toString();
+        Log.i(LOG_TAG, "sharing uri of first trailer: " + uriString);
+
+        shareIntent.putExtra(Intent.EXTRA_TEXT, uriString);
+
+        return shareIntent;
     }
 
     private Uri buildYoutubeUri(String trailerKey) {

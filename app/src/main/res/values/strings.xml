@@ -26,6 +26,8 @@
     <string name="movie_selection_entry_value_newest_first">newest_first</string>
     <string name="movie_selection_entry_value_favorites_only">favorites_only</string>
 
+    <string name="action_share_first_trailer">Share first trailer</string>
+
 </resources>
 
 
