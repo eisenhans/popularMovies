@@ -38,7 +38,6 @@ public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
     }
 
     private List<Movie> readMoviesFromContentResolver() {
-        // TODO: problems if there are many favorite movies?
         Cursor cursor = context.getContentResolver().query(MovieProvider.Movie.MOVIES, null, null, null, MovieColumns.RELEASE_DATE + " desc");
         MovieCursor movieCursor = new MovieCursor(cursor);
         List<Movie> movies = new ArrayList<>(movieCursor.getCount());

@@ -90,8 +90,7 @@ public class MovieDetailsLoader extends AsyncTaskLoader<MovieDetails> {
 
     private boolean isLoadFromFavorites() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String movieSelection = prefs.getString(
-                context.getString(R.string.movie_selection_key), context.getString(R.string.movie_selection_entry_value_most_popular_first));
+        String movieSelection = prefs.getString(context.getString(R.string.movie_selection_key), context.getString(R.string.movie_selection_entry_value_most_popular_first));
 
         return movieSelection.equals(context.getString(R.string.movie_selection_entry_value_favorites_only));
     }

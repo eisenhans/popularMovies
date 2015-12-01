@@ -17,9 +17,6 @@ import com.gmail.maloef.popularmovies.fetch.FetchMoviesTask;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Markus on 15.10.2015.
- */
 public class MovieViewFragment extends Fragment {
     private static final String LOG_TAG = MovieViewFragment.class.getSimpleName();
 
@@ -61,8 +58,7 @@ public class MovieViewFragment extends Fragment {
 
     private String movieSelection() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String movieSelection = prefs.getString(
-                getString(R.string.movie_selection_key), getString(R.string.movie_selection_entry_value_most_popular_first));
+        String movieSelection = prefs.getString(getString(R.string.movie_selection_key), getString(R.string.movie_selection_entry_value_most_popular_first));
 
         return movieSelection;
     }

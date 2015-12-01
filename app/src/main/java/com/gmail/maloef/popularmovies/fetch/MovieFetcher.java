@@ -11,9 +11,6 @@ import com.gmail.maloef.popularmovies.domain.Trailer;
 
 import java.util.List;
 
-/**
- * Created by Markus on 18.11.2015.
- */
 public class MovieFetcher {
     private static final String LOG_TAG = MovieFetcher.class.getSimpleName();
 

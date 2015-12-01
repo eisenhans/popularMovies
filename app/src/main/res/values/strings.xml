@@ -11,8 +11,8 @@
         <item>@string/movie_selection_entry_favorites_only</item>
     </string-array>
 
-    <string name="movie_selection_entry_most_popular_first">Most popular first</string>
-    <string name="movie_selection_entry_newest_first">Newest first</string>
+    <string name="movie_selection_entry_most_popular_first">Most popular movies first</string>
+    <string name="movie_selection_entry_newest_first">Newest movies first</string>
     <string name="movie_selection_entry_favorites_only">Favorite movies only</string>
 
 

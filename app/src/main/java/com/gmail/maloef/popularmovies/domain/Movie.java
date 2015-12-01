@@ -3,9 +3,6 @@ package com.gmail.maloef.popularmovies.domain;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Markus on 01.11.2015.
- */
 public class Movie implements Parcelable {
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
