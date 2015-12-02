@@ -1,6 +1,6 @@
-# popularMovies
+# Popular Movies
 
-*Popular Movies* Android app - my implementation of an exercise from the Udacity course [Developing Android Apps](https://www.udacity.com/course/developing-android-apps--ud853).
+My implementation of an exercise from the Udacity course [Developing Android Apps](https://www.udacity.com/course/developing-android-apps--ud853).
 
 In order to build and run this app, you need a movieDB api key. You can get this api key by registering on the site [www.themoviedb.org](https://www.themoviedb.org/faq/api).
 
