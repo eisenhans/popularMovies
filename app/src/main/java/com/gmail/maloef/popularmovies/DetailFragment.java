@@ -36,8 +36,8 @@ import com.gmail.maloef.popularmovies.domain.Trailer;
 import com.gmail.maloef.popularmovies.fetch.MovieDetailsLoader;
 import com.squareup.picasso.Picasso;
 
-public class DetailActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<MovieDetails> {
-    private static final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
+public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<MovieDetails> {
+    private static final String LOG_TAG = DetailFragment.class.getSimpleName();
 
     private Movie movie;
     private MovieDetails movieDetails;
@@ -45,17 +45,18 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
 
     private ShareActionProvider shareActionProvider;
 
-    public DetailActivityFragment() {
+    public DetailFragment() {
         setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-        Intent intent = getActivity().getIntent();
+        detailLinearLayout = (LinearLayout) rootView.findViewById(R.id.detail_linear_layout);
 
-        if (intent != null && intent.hasExtra("movie")) {
-            movie = (Movie) intent.getParcelableExtra("movie");
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            movie = arguments.getParcelable("movie");
 
             ImageView imageView = (ImageView) rootView.findViewById(R.id.movie_poster_path);
             if (movie.getPosterUrl() == null) {
@@ -88,8 +89,6 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
                     }
                 }
             });
-
-            detailLinearLayout = (LinearLayout) rootView.findViewById(R.id.detail_linear_layout);
         }
         return rootView;
     }
@@ -109,13 +108,24 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
 
     private void addToFavorites(Movie movie) {
         ContentValues contentValues = ContentValuesUtil.fromMovie(movie);
-        getContentResolver().insert(MovieProvider.Movie.MOVIES, contentValues);
+        Uri movieUri = getContentResolver().insert(MovieProvider.Movie.MOVIES, contentValues);
+        Log.i(LOG_TAG, "inserted favorite movie " + movie.title + " (_id " + movie._id + "), uri: " + movieUri);
 
         ContentValues[] trailerValues = ContentValuesUtil.fromTrailers(movieDetails.trailers);
-        getContentResolver().bulkInsert(MovieProvider.Trailer.TRAILERS, trailerValues);
+        int insertedTrailers = getContentResolver().bulkInsert(MovieProvider.Trailer.TRAILERS, trailerValues);
+        if (insertedTrailers != movieDetails.trailers.size()) {
+            Log.w(LOG_TAG, "only " + insertedTrailers + " out of " + movieDetails.trailers.size() + " trailers were inserted");
+        } else {
+            Log.i(LOG_TAG, "inserted " + insertedTrailers + " trailers");
+        }
 
         ContentValues[] reviewValues = ContentValuesUtil.fromReviews(movieDetails.reviews);
-        getContentResolver().bulkInsert(MovieProvider.Review.REVIEWS, reviewValues);
+        int insertedReviews = getContentResolver().bulkInsert(MovieProvider.Review.REVIEWS, reviewValues);
+        if (insertedReviews != movieDetails.reviews.size()) {
+            Log.w(LOG_TAG, "only " + insertedReviews + " out of " + movieDetails.reviews.size() + " reviews were inserted");
+        } else {
+            Log.i(LOG_TAG, "inserted " + insertedReviews + " reviews");
+        }
     }
 
     private void removeFromFavorites(Movie movie) {
@@ -129,6 +139,10 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     @Override
     public void onResume() {
         super.onResume();
+        if (movie == null) {
+            Log.i(LOG_TAG, "no movie selected yet in twoPaneLayout");
+            return;
+        }
         if (movieDetails != null) {
             Log.i(LOG_TAG, "movieDetails for movie " + movie.title + " have already been initialized - won't do it again");
             return;
@@ -230,8 +244,6 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
         shareIntent.setType("text/plain");
 
         String uriString = buildYoutubeUri(firstTrailerKey).toString();
-        Log.i(LOG_TAG, "sharing uri of first trailer: " + uriString);
-
         shareIntent.putExtra(Intent.EXTRA_TEXT, uriString);
 
         return shareIntent;

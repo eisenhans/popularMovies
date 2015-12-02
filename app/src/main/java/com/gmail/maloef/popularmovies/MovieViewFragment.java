@@ -1,10 +1,10 @@
 package com.gmail.maloef.popularmovies;
 
-import android.app.Fragment;
-import android.content.Intent;
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +19,10 @@ import java.util.List;
 
 public class MovieViewFragment extends Fragment {
     private static final String LOG_TAG = MovieViewFragment.class.getSimpleName();
+
+    public interface Callback {
+        void onMovieSelected(Movie movie);
+    }
 
     private PosterAdapter posterAdapter;
 
@@ -37,9 +41,7 @@ public class MovieViewFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Movie movie = posterAdapter.getItem(position);
 
-                Intent intent = new Intent(getActivity(), DetailActivity.class);
-                intent.putExtra("movie", movie);
-                startActivity(intent);
+                ((Callback) getActivity()).onMovieSelected(movie);
             }
         });
 

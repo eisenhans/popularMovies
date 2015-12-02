@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.content.AsyncTaskLoader;
+import android.util.Log;
 
 import com.gmail.maloef.popularmovies.R;
 import com.gmail.maloef.popularmovies.data.MovieProvider;
@@ -52,6 +53,7 @@ public class MovieDetailsLoader extends AsyncTaskLoader<MovieDetails> {
         ReviewCursor reviewCursor = new ReviewCursor(context.getContentResolver().query(MovieProvider.Review.findByMovie(movie._id), null, null, null, ReviewColumns._ID + " asc"));
         details.reviews = loadReviews(reviewCursor);
 
+        Log.i(LOG_TAG, "loaded details for movie " + movie.title + "(_id " + movie._id + "): " + details.trailers.size() + " trailers, " + details.reviews.size() + " reviews");
         return details;
     }
 
