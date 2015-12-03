@@ -11,8 +11,6 @@ import com.gmail.maloef.popularmovies.domain.Movie;
 
 public class MainActivity extends AppCompatActivity implements MovieViewFragment.Callback {
 
-//    private static final String DETAIL_FRAGMENT_TAG = "DETAIL_FRAGMENT_TAG";
-
     private boolean twoPaneLayout;
     private boolean movieSelected;
 
