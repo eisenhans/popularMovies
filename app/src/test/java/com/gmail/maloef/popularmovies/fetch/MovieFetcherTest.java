@@ -18,14 +18,14 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk=21)
-public class TestMovieFetcher {
+public class MovieFetcherTest {
 
     private HttpUriRequester mockUriRequester = new HttpUriRequester();
 
     private JsonParser jsonParser = new JsonParser();
 
     @Test
-    public void testFetchMovies() {
+    public void fetchMovies() {
         MovieFetcher fetcher = new MovieFetcher(mockUriRequester, jsonParser);
 
         List<Movie> movies = fetcher.fetchMoviesByPopularity();
@@ -37,7 +37,7 @@ public class TestMovieFetcher {
     }
 
     @Test
-    public void testFetchTrailers() {
+    public void fetchTrailers() {
         MovieFetcher fetcher = new MovieFetcher(mockUriRequester, jsonParser);
 
         List<Trailer> trailers = fetcher.fetchTrailers(206647);
@@ -47,7 +47,7 @@ public class TestMovieFetcher {
     }
 
     @Test
-    public void testFetchReviews() {
+    public void fetchReviews() {
         MovieFetcher fetcher = new MovieFetcher(mockUriRequester, jsonParser);
 
         List<Review> reviews = fetcher.fetchReviews(206647);
@@ -59,6 +59,4 @@ public class TestMovieFetcher {
         Spanned htmlLink = reviews.get(0).getHtmlLink();
         assertEquals("cutprintchris", htmlLink.toString());
     }
-
-
 }
