@@ -38,23 +38,31 @@ public class MovieDetailsLoader extends AsyncTaskLoader<MovieDetails> {
 
     @Override
     public MovieDetails loadInBackground() {
-        if (isLoadFromFavorites()) {
-            return loadFromFavorites();
+        boolean fromFavorites = isLoadFromFavorites();
+        long startTime = System.currentTimeMillis();
+        if (fromFavorites) {
+            loadFromFavorites();
+        } else {
+            loadFromWeb();
         }
-        return loadFromWeb();
+        long duration = System.currentTimeMillis() - startTime;
+        String from = fromFavorites ? "database" : "web";
+        Log.i(LOG_TAG, "loaded details for movie " + movie.title + " from " + from + " in " + duration + " ms (" +
+                movieDetails.trailers.size() + " trailers, " + movieDetails.reviews.size() + " reviews)");
+
+        return movieDetails;
     }
 
-    private MovieDetails loadFromFavorites() {
-        MovieDetails details = new MovieDetails(movie);
+    private void loadFromFavorites() {
+        movieDetails = new MovieDetails(movie);
 
         TrailerCursor trailerCursor = new TrailerCursor(context.getContentResolver().query(MovieProvider.Trailer.findByMovie(movie._id), null, null, null, TrailerColumns._ID + " asc"));
-        details.trailers = loadTrailers(trailerCursor);
+        movieDetails.trailers = loadTrailers(trailerCursor);
+        trailerCursor.close();
 
         ReviewCursor reviewCursor = new ReviewCursor(context.getContentResolver().query(MovieProvider.Review.findByMovie(movie._id), null, null, null, ReviewColumns._ID + " asc"));
-        details.reviews = loadReviews(reviewCursor);
-
-        Log.i(LOG_TAG, "loaded details for movie " + movie.title + "(_id " + movie._id + "): " + details.trailers.size() + " trailers, " + details.reviews.size() + " reviews");
-        return details;
+        movieDetails.reviews = loadReviews(reviewCursor);
+        reviewCursor.close();
     }
 
     private List<Trailer> loadTrailers(TrailerCursor trailerCursor) {
@@ -73,21 +81,11 @@ public class MovieDetailsLoader extends AsyncTaskLoader<MovieDetails> {
         return reviews;
     }
 
-    private MovieDetails loadFromWeb() {
+    private void loadFromWeb() {
         HttpUriRequester httpUriRequester = new HttpUriRequester();
         JsonParser parser = new JsonParser();
         MovieFetcher fetcher = new MovieFetcher(httpUriRequester, parser);
-
-//        Log.i(LOG_TAG, "simulating slow internet connection, waiting 5 sec");
-//        try {
-//            Thread.currentThread().sleep(5000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        Log.i(LOG_TAG, "waiting finished!");
-
         movieDetails = fetcher.fetchMovieDetails(movie);
-        return movieDetails;
     }
 
     private boolean isLoadFromFavorites() {

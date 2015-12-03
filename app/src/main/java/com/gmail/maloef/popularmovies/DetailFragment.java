@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gmail.maloef.popularmovies.data.ContentValuesUtil;
+import com.gmail.maloef.popularmovies.data.MovieColumns;
 import com.gmail.maloef.popularmovies.data.MovieProvider;
 import com.gmail.maloef.popularmovies.domain.Movie;
 import com.gmail.maloef.popularmovies.domain.MovieDetails;
@@ -111,6 +112,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         Uri movieUri = getContentResolver().insert(MovieProvider.Movie.MOVIES, contentValues);
         Log.i(LOG_TAG, "inserted favorite movie " + movie.title + " (_id " + movie._id + "), uri: " + movieUri);
 
+        int _id = Integer.valueOf(movieUri.getLastPathSegment());
+        updateForeignKeys(_id);
+
         ContentValues[] trailerValues = ContentValuesUtil.fromTrailers(movieDetails.trailers);
         int insertedTrailers = getContentResolver().bulkInsert(MovieProvider.Trailer.TRAILERS, trailerValues);
         if (insertedTrailers != movieDetails.trailers.size()) {
@@ -128,8 +132,32 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         }
     }
 
+    private void updateForeignKeys(int _id) {
+        for (Trailer trailer : movieDetails.trailers) {
+            trailer.movie = _id;
+        }
+        for (Review review : movieDetails.reviews) {
+            review.movie = _id;
+        }
+    }
+
     private void removeFromFavorites(Movie movie) {
-        getContentResolver().delete(MovieProvider.Movie.MOVIES, "movieId = ?", new String[]{String.valueOf(movie.movieId)});
+        Cursor cursor = getContentResolver().query(
+                MovieProvider.Movie.MOVIES,
+                new String[]{"_id"},
+                "movieId = ?",
+                new String[]{String.valueOf(movie.movieId)},
+                null);
+
+        if (cursor.moveToFirst()) {
+            int _id = cursor.getInt(cursor.getColumnIndex(MovieColumns._ID));
+            String _idString = String.valueOf(_id);
+
+            getContentResolver().delete(MovieProvider.Trailer.TRAILERS, "movie = ?", new String[]{_idString});
+            getContentResolver().delete(MovieProvider.Review.REVIEWS, "movie = ?", new String[]{_idString});
+            getContentResolver().delete(MovieProvider.Movie.MOVIES, "_id = ?", new String[]{_idString});
+        }
+        cursor.close();
     }
 
     private ContentResolver getContentResolver() {
