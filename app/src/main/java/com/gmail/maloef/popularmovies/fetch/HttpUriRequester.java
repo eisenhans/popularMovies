@@ -28,7 +28,8 @@ public class HttpUriRequester {
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
-            InputStream inputStream = urlConnection.getInputStream();
+            Log.i(LOG_TAG, "getting input stream from url " + url);
+            InputStream inputStream = urlConnection.getInputStream(); // hangs if no connection!
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
                 return null;
@@ -48,8 +49,7 @@ public class HttpUriRequester {
             }
             return buffer.toString();
         } catch (IOException e) {
-
-            Log.e(LOG_TAG, "Error fetching movie data\n", e);
+            Log.e(LOG_TAG, "Error fetching movie data: " +  e.getMessage(), e);
             return null;
         } finally {
             if (urlConnection != null) {

@@ -110,8 +110,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private void addToFavorites(Movie movie) {
         ContentValues contentValues = ContentValuesUtil.fromMovie(movie);
         Uri movieUri = getContentResolver().insert(MovieProvider.Movie.MOVIES, contentValues);
-        Log.i(LOG_TAG, "inserted favorite movie " + movie.title + " (_id " + movie._id + "), uri: " + movieUri);
 
+        if (movieDetails == null) {
+            Log.w(LOG_TAG, "Added movie " + movie.title + " to favorites, but movieDetails are null. Probably there is no internet connection.");
+            return;
+        }
+        Log.i(LOG_TAG, "added movie " + movie.title + ", to favorites, uri: " + movieUri);
         int _id = Integer.valueOf(movieUri.getLastPathSegment());
         updateForeignKeys(_id);
 
@@ -231,7 +235,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             final Review review = movieDetails.reviews.get(i);
             View reviewView = inflater.inflate(R.layout.list_item_review, null);
             detailLinearLayout.addView(reviewView);
-            Log.i(LOG_TAG, "added review by author " + review.author + " to view " + reviewView);
 
             CharSequence linkText = Html.fromHtml("<a href=\"" + review.url  + "\">" + review.author + "</a>");
             Log.i(LOG_TAG, "created review link: " + linkText);
