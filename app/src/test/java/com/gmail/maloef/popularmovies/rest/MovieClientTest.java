@@ -32,6 +32,7 @@ public class MovieClientTest {
 
         Movie movie = movies.get(0);
         assertEquals("Ant-Man", movie.title);
+        assertEquals("Ant-Man", movie.originalTitle);
     }
 
     @Test
@@ -40,6 +41,7 @@ public class MovieClientTest {
         assertEquals(3, trailers.size());
 
         assertEquals("Spectre Ultimate 007 Teaser", trailers.get(0).name);
+        assertEquals("BOVriTeIypQ", trailers.get(0).key);
     }
 
     @Test

@@ -47,7 +47,7 @@ public class Trailer implements Parcelable {
     public String toString() {
         return "Trailer{" +
                 "_id='" + _id + '\'' +
-                "key='" + key + '\'' +
+                ", key='" + key + '\'' +
                 ", name='" + name + '\'' +
                 ", movie='" + movie + '\'' +
                 '}';

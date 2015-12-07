@@ -7,12 +7,16 @@ import com.gmail.maloef.popularmovies.domain.Movie;
 import com.gmail.maloef.popularmovies.domain.MovieDetails;
 import com.gmail.maloef.popularmovies.domain.Review;
 import com.gmail.maloef.popularmovies.domain.Trailer;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Call;
+import retrofit.GsonConverterFactory;
 import retrofit.Response;
 import retrofit.Retrofit;
 
@@ -23,8 +27,9 @@ public class MovieClient {
     private MovieService movieService;
 
     public MovieClient() {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(new MovieConverterFactory()).build();
-        //Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
+        //Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(new MovieConverterFactory()).build();
+        Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create(gson)).build();
 
         movieService = retrofit.create(MovieService.class);
     }
@@ -38,10 +43,10 @@ public class MovieClient {
     }
 
     private List<Movie> fetchMovies(String sortBy) {
-        Call<List<Movie>> movieCall = movieService.loadMovies(sortBy + ".desc", BuildConfig.MOVIE_DB_API_KEY);
+        Call<MovieDbResponse<Movie>> movieCall = movieService.loadMovies(sortBy + ".desc", BuildConfig.MOVIE_DB_API_KEY);
         try {
-            Response<List<Movie>> response = movieCall.execute();
-            return response.body();
+            Response<MovieDbResponse<Movie>> response = movieCall.execute();
+            return response.body().results;
         } catch (IOException e) {
             Log.e(LOG_TAG, "could not load movies: " + e.getMessage());
             return new ArrayList<>();
@@ -58,10 +63,10 @@ public class MovieClient {
     }
 
     List<Trailer> fetchTrailers(int movieId) {
-        Call<List<Trailer>> trailerCall = movieService.loadTrailers(movieId, BuildConfig.MOVIE_DB_API_KEY);
+        Call<MovieDbResponse<Trailer>> trailerCall = movieService.loadTrailers(movieId, BuildConfig.MOVIE_DB_API_KEY);
         try {
-            Response<List<Trailer>> response = trailerCall.execute();
-            return response.body();
+            Response<MovieDbResponse<Trailer>> response = trailerCall.execute();
+            return response.body().results;
         } catch (IOException e) {
             Log.e(LOG_TAG, "could not load trailers: " + e.getMessage());
             return new ArrayList<>();
@@ -69,10 +74,10 @@ public class MovieClient {
     }
 
     List<Review> fetchReviews(int movieId) {
-        Call<List<Review>> reviewCall = movieService.loadReviews(movieId, BuildConfig.MOVIE_DB_API_KEY);
+        Call<MovieDbResponse<Review>> reviewCall = movieService.loadReviews(movieId, BuildConfig.MOVIE_DB_API_KEY);
         try {
-            Response<List<Review>> response = reviewCall.execute();
-            return response.body();
+            Response<MovieDbResponse<Review>> response = reviewCall.execute();
+            return response.body().results;
         } catch (IOException e) {
             Log.e(LOG_TAG, "could not load reviews: " + e.getMessage());
             return new ArrayList<>();

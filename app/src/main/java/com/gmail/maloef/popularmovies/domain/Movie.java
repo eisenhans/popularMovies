@@ -3,6 +3,8 @@ package com.gmail.maloef.popularmovies.domain;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Movie implements Parcelable {
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -28,6 +30,8 @@ public class Movie implements Parcelable {
     };
 
     public int _id;
+
+    @SerializedName("id")
     public int movieId;
     public String title;
     public String originalTitle;
@@ -76,7 +80,7 @@ public class Movie implements Parcelable {
                 ", movieId=" + movieId +
                 ", title='" + title + '\'' +
                 ", originalTitle='" + originalTitle + '\'' +
-                "posterPath='" + posterPath + '\'' +
+                ", posterPath='" + posterPath + '\'' +
                 ", voteAverage='" + voteAverage + '\'' +
                 ", releaseDate='" + releaseDate + '\'' +
                 ", overview='" + overview + '\'' +
