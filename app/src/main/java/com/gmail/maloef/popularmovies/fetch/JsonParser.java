@@ -20,6 +20,7 @@ public class JsonParser {
     private static String LOG_TAG = JsonParser.class.getSimpleName();
 
     public List<Movie> getMovies(String movieJsonString) {
+        System.out.println("movieJsonString: " + movieJsonString);
         if (movieJsonString == null) {
             return new ArrayList<>();
         }

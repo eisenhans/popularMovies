@@ -16,6 +16,7 @@ import com.gmail.maloef.popularmovies.domain.Movie;
 import com.gmail.maloef.popularmovies.domain.MovieDetails;
 import com.gmail.maloef.popularmovies.domain.Review;
 import com.gmail.maloef.popularmovies.domain.Trailer;
+import com.gmail.maloef.popularmovies.rest.MovieClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,8 @@ import java.util.List;
  */
 public class MovieDetailsLoader extends AsyncTaskLoader<MovieDetails> {
     private static final String LOG_TAG = MovieDetailsLoader.class.getSimpleName();
+
+    private MovieClient movieClient = new MovieClient();
 
     private Context context;
     private final Movie movie;
@@ -82,10 +85,7 @@ public class MovieDetailsLoader extends AsyncTaskLoader<MovieDetails> {
     }
 
     private void loadFromWeb() {
-        HttpUriRequester httpUriRequester = new HttpUriRequester();
-        JsonParser parser = new JsonParser();
-        MovieFetcher fetcher = new MovieFetcher(httpUriRequester, parser);
-        movieDetails = fetcher.fetchMovieDetails(movie);
+        movieDetails = movieClient.fetchMovieDetails(movie);
     }
 
     private boolean isLoadFromFavorites() {

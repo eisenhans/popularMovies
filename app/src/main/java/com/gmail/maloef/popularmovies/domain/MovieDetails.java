@@ -10,6 +10,7 @@ import java.util.List;
  * Created by Markus on 24.11.2015.
  */
 public class MovieDetails implements Parcelable {
+    private static final String LOG_TAG = MovieDetails.class.getSimpleName();
 
     public static final Creator<MovieDetails> CREATOR = new Creator<MovieDetails>() {
         @Override

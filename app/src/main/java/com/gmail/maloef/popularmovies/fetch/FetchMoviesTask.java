@@ -10,12 +10,15 @@ import com.gmail.maloef.popularmovies.data.MovieColumns;
 import com.gmail.maloef.popularmovies.data.MovieCursor;
 import com.gmail.maloef.popularmovies.data.MovieProvider;
 import com.gmail.maloef.popularmovies.domain.Movie;
+import com.gmail.maloef.popularmovies.rest.MovieClient;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
     private static final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
+
+    private MovieClient movieClient = new MovieClient();
 
     private Context context;
     private PosterAdapter posterAdapter;
@@ -48,15 +51,15 @@ public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
     }
 
     private List<Movie> readMoviesFromWeb(String movieSelection) {
-        HttpUriRequester httpUriRequester = new HttpUriRequester();
-        JsonParser parser = new JsonParser();
-        MovieFetcher fetcher = new MovieFetcher(httpUriRequester, parser);
+//        HttpUriRequester httpUriRequester = new HttpUriRequester();
+//        JsonParser parser = new JsonParser();
+//        MovieFetcher fetcher = new MovieFetcher(httpUriRequester, parser);
 
         if (movieSelection.equals("most_popular_first")) {
-            return fetcher.fetchMoviesByPopularity();
+            return movieClient.fetchMoviesByPopularity();
         }
         if (movieSelection.equals("newest_first")) {
-            return fetcher.fetchMoviesByReleaseDate();
+            return movieClient.fetchMoviesByReleaseDate();
         }
         throw new IllegalStateException("unexpected movie selection: " + movieSelection + " - expected most_popular_first or newest_first");
     }

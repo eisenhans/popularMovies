@@ -1,4 +1,4 @@
-package com.gmail.maloef.popularmovies.fetch;
+package com.gmail.maloef.popularmovies.rest;
 
 import android.text.Spanned;
 
@@ -18,17 +18,15 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk=21)
-public class MovieFetcherTest {
+public class MovieClientTest {
+    private static final String LOG_TAG = MovieClientTest.class.getName();
 
-    private HttpUriRequester mockUriRequester = new HttpUriRequester();
-
-    private JsonParser jsonParser = new JsonParser();
+    MovieClient movieClient = new MovieClient();
 
     @Test
     public void fetchMovies() {
-        MovieFetcher fetcher = new MovieFetcher(mockUriRequester, jsonParser);
-
-        List<Movie> movies = fetcher.fetchMoviesByPopularity();
+        List<Movie> movies = movieClient.fetchMoviesByPopularity();
+        System.out.println("movies: " + movies);
 
         assertEquals(20, movies.size());
 
@@ -38,19 +36,15 @@ public class MovieFetcherTest {
 
     @Test
     public void fetchTrailers() {
-        MovieFetcher fetcher = new MovieFetcher(mockUriRequester, jsonParser);
-
-        List<Trailer> trailers = fetcher.fetchTrailers(206647);
+        List<Trailer> trailers = movieClient.fetchTrailers(206647);
         assertEquals(3, trailers.size());
 
-        assertEquals("Spectre Ultimate 007 Trailer", trailers.get(0).name);
+        assertEquals("Spectre Ultimate 007 Teaser", trailers.get(0).name);
     }
 
     @Test
     public void fetchReviews() {
-        MovieFetcher fetcher = new MovieFetcher(mockUriRequester, jsonParser);
-
-        List<Review> reviews = fetcher.fetchReviews(206647);
+        List<Review> reviews = movieClient.fetchReviews(206647);
         assertEquals(3, reviews.size());
 
         assertEquals("cutprintchris", reviews.get(0).author);
@@ -59,4 +53,5 @@ public class MovieFetcherTest {
         Spanned htmlLink = reviews.get(0).getHtmlLink();
         assertEquals("cutprintchris", htmlLink.toString());
     }
+
 }

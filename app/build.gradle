@@ -29,9 +29,15 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
 
-    compile 'com.squareup.picasso:picasso:2.5.2'
     apt 'net.simonvt.schematic:schematic-compiler:0.6.4'
     compile 'net.simonvt.schematic:schematic:0.6.4'
+
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
+    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
+    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+//    compile 'com.google.code.gson:gson:2.5'
+    compile 'com.squareup.okhttp:okhttp:2.6.0'
 
     // TODO: remove stetho dependency for release, or use debugCompile
     compile 'com.facebook.stetho:stetho:1.2.0'
