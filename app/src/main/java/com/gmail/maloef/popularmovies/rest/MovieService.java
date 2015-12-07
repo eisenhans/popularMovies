@@ -10,7 +10,15 @@ import retrofit.http.Path;
 import retrofit.http.Query;
 
 /**
- * Example: http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=<apiKey>;
+ * Example rest calls:
+ *
+ * <pre>
+ * Movies: http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=YOUR_API_KEY_HERE
+ *
+ * Trailers: http://api.themoviedb.org/3/movie/206647/videos?api_key=YOUR_API_KEY_HERE
+ *
+ * Reviews: http://api.themoviedb.org/3/movie/206647/reviews?api_key=YOUR_API_KEY_HERE
+ * </pre>
  */
 public interface MovieService {
 
