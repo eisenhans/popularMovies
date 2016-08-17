@@ -2,10 +2,10 @@
 
 Project 1 & 2 from the Udacity course [Developing Android Apps](https://www.udacity.com/course/developing-android-apps--ud853).
 
-Fully functional and colorful app which I created from scratch.
+Fully functional and colorful app which I created from scratch. Graded as "Exceeds Specifications" by the Udacity code reviewer.
 
 ## Features
-* Discover movies that are popular currently.
+* Discover movies that are currently popular.
 * Sort movies by popularity or release date.
 * Watch trailers and read reviews.
 * Mark movies as favorites to save them locally and view them when offline.
