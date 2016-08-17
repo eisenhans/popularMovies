@@ -20,8 +20,12 @@ Then define a variable
 in the file `<USER_HOME>`/.gradle/gradle.properties.
 
 ## Screenshots
+
+Smartphone (master and detail on different screens):
 ![PhoneMain](/screenshots/PhoneMain.png?raw=true)
 ![PhoneDetails](/screenshots/PhoneDetails.png?raw=true)
+
+Tablet (master and detail on same screen):
 ![Tablet](/screenshots/Tablet.png?raw=true)
 
 
