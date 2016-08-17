@@ -21,8 +21,8 @@ in the file `<USER_HOME>`/.gradle/gradle.properties.
 
 ## Screenshots
 
-Smartphone (master and detail on different screens):
-![PhoneMain](/screenshots/PhoneMain.png?raw=true)
+Smartphone (master and detail on different screens):                                     
+![PhoneMain](/screenshots/PhoneMain.png)
 ![PhoneDetails](/screenshots/PhoneDetails.png?raw=true)
 
 Tablet (master and detail on same screen):
