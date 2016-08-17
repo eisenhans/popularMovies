@@ -9,7 +9,11 @@ import com.squareup.okhttp.OkHttpClient;
 public class PopularMoviesApplication extends Application {
     public void onCreate() {
         super.onCreate();
-        Stetho.initializeWithDefaults(this);
+
+        Stetho.initialize(Stetho.newInitializerBuilder(this)
+                .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
+                .build());
 
         OkHttpClient client = new OkHttpClient();
         client.networkInterceptors().add(new StethoInterceptor());
